@@ -99,3 +99,32 @@ h2 {
   margin-bottom: 1.5rem;
   color: #333;
 }
+
+.error-message {
+  color: #dc3545;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f8d7da;
+  border-radius: 4px;
+}
+
+.toggle-auth {
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.toggle-auth:hover {
+  text-decoration: underline;
+  background: none;
+}
+
+.game-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
