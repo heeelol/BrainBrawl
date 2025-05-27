@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Server specific
+server/node_modules
+server/.env
+server/config/*.json
+server/coverage
+server/build
+server/dist
