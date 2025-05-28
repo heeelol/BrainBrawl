@@ -26,7 +26,7 @@ export default function Register() {
                 setData({})
                 toast.success('Registration successful');
                 navigate('/login');
-            }o
+            }
 
         } catch (error) {
             console.log(error);
