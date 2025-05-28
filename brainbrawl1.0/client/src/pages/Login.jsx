@@ -22,10 +22,11 @@ export default function Login() {
                 toast.error(data.error);
             } else {
                 setData({});
-                navigate('/');
+                toast.success('Login successful');
+                navigate('/dashboard');
             }
         } catch (error) {
-
+            toast.error('Login failed');
     }
 }
 
