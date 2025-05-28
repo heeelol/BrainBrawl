@@ -5,6 +5,9 @@ const test = (req, res) => {
     res.json('test is working');
 }
 
+
+// Register endpoint
+// This endpoint allows users to register by providing their name, email, and password.
 const registerUser = async (req, res) => {
     try {
         const {name, email, password} = req.body;
@@ -42,7 +45,38 @@ const registerUser = async (req, res) => {
     }
 }
 
+// Login endpoint
+// This endpoint allows users to log in by providing their email and password.
+const loginUser = async (req, res) => {
+    try {
+        const {email, password} = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({email})
+        if (!user) {
+            return res.json({
+                error: 'User not found'
+            })
+        }
+
+        // Check if password is correct
+        const match = await comparePassword(password, user.password);
+        if (match) {
+            res.json('password matched');
+        }
+
+        if (!match) {
+            return res.json({
+                error: 'Invalid credentials'
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     test,
-    registerUser
+    registerUser,
+    loginUser
 }
