@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const { hashPassword, comparePassword } = require('../helpers/auth');
+const jwt = require('jsonwebtoken');
 
 const test = (req, res) => {
     res.json('test is working');
@@ -62,7 +63,10 @@ const loginUser = async (req, res) => {
         // Check if password is correct
         const match = await comparePassword(password, user.password);
         if (match) {
-            res.json('password matched');
+            jwt.sign({email: user.email, id: user._id, name: user.name}, process.env.JWT_SECRET, {}, (err, token) => {
+                if (err) throw err;
+                res.cookie('token', token).json(user)
+            })
         }
 
         if (!match) {
