@@ -2,10 +2,33 @@ import { useContext } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 
 export default function Dashboard() {
-    const {user} = useContext(UserContext)
+    const {user} = useContext(UserContext);
+    
     return (
-        <div>
-            <h1>Dashboard</h1>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
+            <div className="pt-16 px-4 sm:px-6 lg:px-8"> {/* Added pt-16 to account for Navbar height */}
+                <div className="max-w-7xl mx-auto">
+                    <h1 className="text-3xl font-bold text-white mb-8">
+                        Welcome, {user?.name || 'Warrior'}!
+                    </h1>
+                    {/* Dashboard content will go here */}
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {/* Placeholder cards for dashboard content */}
+                        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg">
+                            <h2 className="text-xl font-semibold text-white mb-4">Your Stats</h2>
+                            <p className="text-gray-300">Coming soon...</p>
+                        </div>
+                        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg">
+                            <h2 className="text-xl font-semibold text-white mb-4">Active Challenges</h2>
+                            <p className="text-gray-300">No active challenges</p>
+                        </div>
+                        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg">
+                            <h2 className="text-xl font-semibold text-white mb-4">Leaderboard</h2>
+                            <p className="text-gray-300">Loading rankings...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    )
+    );
 }

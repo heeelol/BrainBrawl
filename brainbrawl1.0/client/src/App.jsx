@@ -12,16 +12,17 @@ import Dashboard from './pages/Dashboard.jsx';
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
 
-function App() {
-  return (
+function App() {  return (
     <UserContextProvider>
-      <Navbar />
       <Toaster position='bottom-right' toastOptions={{duration: 2000}} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<>
+          <Navbar />
+          <Dashboard />
+        </>} />
       </Routes>
     </UserContextProvider> 
   )
