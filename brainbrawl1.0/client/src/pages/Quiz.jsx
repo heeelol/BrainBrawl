@@ -22,10 +22,10 @@ export default function Quiz() {
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="text-center">
                         <h2 className="text-3xl font-extrabold text-white">
-                            Welcome Back, Warrior
+                            Quiz Time, Warrior!
                         </h2>
                         <p className="mt-2 text-sm text-indigo-300">
-                            Ready to continue your quest for knowledge?
+                            Answer questions, earn points, and climb the leaderboard!
                         </p>
                     </div>
                 </div>
@@ -34,13 +34,11 @@ export default function Quiz() {
                     <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
 
                         <div className="mt-6">
-                            <div className="relative">
+                            <div className="relative"> {/* Divider without text */ }
                                 <div className="absolute inset-0 flex items-center">
                                     <div className="w-full border-t border-gray-700"></div>
                                 </div>
-                                <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-gray-800 text-gray-400">New to BrainBrawl?</span>
-                                </div>
+                                <div className="relative flex justify-center text-sm"></div>
                             </div>
 
                             <div className="mt-6">
