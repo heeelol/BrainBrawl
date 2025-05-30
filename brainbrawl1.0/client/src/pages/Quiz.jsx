@@ -1,8 +1,53 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {Link} from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
+import {data} from "../assets/data.js";
+import './Quiz.css'
 
 export default function Quiz() {
+    let [index, setIndex] = useState(0);
+    let [questions, setQuestions] = useState(data[index]);
+    let [lock, setLock] = useState(false);
+    let [score, setScore] = useState(0);
+    let[result, setResult] = useState(false);
+
+    let option1 = useRef(null);
+    let option2 = useRef(null);
+    let option3 = useRef(null);
+    let option4 = useRef(null);
+    let options = [option1, option2, option3, option4];
+
+    const checkAnswer = (selectedOption, ans) => {
+        if (!lock) {
+            if (questions.ans === ans) {
+                // Correct answer logic
+                selectedOption.target.classList.add('correct');
+                setScore(prev => prev + 1);
+            } else {
+                // Incorrect answer logic
+                selectedOption.target.classList.add('incorrect');
+                options[questions.ans - 1].current.classList.add('correct'); // Highlight the correct answer
+            }
+            setLock(true);
+        }
+    }
+
+    const nextQuestion = () => {
+        if (lock) {
+            if (index === data.length - 1) {
+                setResult(true);
+                return 0;
+            }
+            setIndex(++index);
+            setQuestions(data[index]);
+            setLock(false);
+            options.map((option) => {
+                option.current.classList.remove('correct', 'incorrect');
+                return null;
+            });
+        }
+    }
+
     return (
         <>
             <header className="sticky top-0 z-50 flex justify-center items-center">
@@ -11,14 +56,6 @@ export default function Quiz() {
                 </div>
             </header>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
-                <div className="fixed top-4 left-4">
-                    <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition-colors">
-                        <svg className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Back to Dashboard
-                    </Link>
-                </div>
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="text-center">
                         <h2 className="text-3xl font-extrabold text-white">
@@ -33,22 +70,46 @@ export default function Quiz() {
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
 
-                        <div className="mt-6">
-                            <div className="relative"> {/* Divider without text */ }
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-700"></div>
+                        <div className="mt-0">
+                            {result ? <>
+                                <div className="text-center">
+                                    <h3 className="text-2xl font-bold text-gray-200">Quiz Completed!</h3>
+                                    <p className="mt-2 text-lg text-gray-300">Your Score: {score}/{data.length}</p>
+                                    <Link to="/dashboard" className="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                                        Back to Dashboard
+                                    </Link>
                                 </div>
-                                <div className="relative flex justify-center text-sm"></div>
-                            </div>
+                            </> : <>
+                                <h2 className="text-gray-200 text-2xl font-bold">
+                                    {index + 1}. {questions.question}
+                                </h2>
 
-                            <div className="mt-6">
-                                <button
-                                    onClick={() => navigate('#')}
-                                    className="w-full flex justify-center py-2 px-4 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-200 bg-transparent hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                    Join the Battle
-                                </button>
-                            </div>
+                                <div className="relative mt-5"> {/* Divider without text */}
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-700"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-sm"></div>
+                                </div>
+
+                                <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
+                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>{questions.option1}</li>
+                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>{questions.option2}</li>
+                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>{questions.option3}</li>
+                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>{questions.option4}</li>
+                                </ul>
+
+                                <div className="mt-6">
+                                    <button
+                                        onClick={nextQuestion}
+                                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105"
+                                    >
+                                        Next Question
+                                    </button>
+                                </div>
+
+                                <div className="mt-2 text-center text-gray-400">{index + 1} of {data.length} questions</div>
+                            </>}
+
                         </div>
                     </div>
                 </div>
