@@ -1,6 +1,7 @@
 import './App.css'
 import {Routes, Route} from 'react-router-dom';
 import Navbar from '../src/components/Navbar.jsx';
+import Navbar_2 from "./components/Navbar_2.jsx";
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -8,7 +9,7 @@ import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
-import Navbar_2 from "./components/Navbar_2.jsx";
+import Quiz from "./pages/Quiz.jsx";
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -35,6 +36,7 @@ function App() {  return (
             </header>
           <Dashboard />
         </>} />
+        <Route path="/quiz" element={<Quiz />} />
       </Routes>
     </UserContextProvider> 
   )

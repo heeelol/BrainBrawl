@@ -28,6 +28,21 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+                <div className="max-w-7xl mx-auto mt-16">
+                    <h1 className="text-3xl font-bold text-white mb-8">
+                        Quizzes
+                    </h1>
+                    {/* Dashboard content will go here */}
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {/* Placeholder cards for dashboard content */}
+                        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg hover:transform hover:scale-105 transition duration-300">
+                            <a href="/quiz" className="block">
+                                <h2 className="text-xl font-semibold text-white mb-4">General Knowledge</h2>
+                                <p className="text-gray-300">Everything under the sun!</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
