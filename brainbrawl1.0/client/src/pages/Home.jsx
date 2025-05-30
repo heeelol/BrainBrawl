@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 function AnimatedBackground() {
     return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">            <div className="absolute left-1/3 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute left-1/3 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="relative animate-float-left">
                     <div className="text-9xl opacity-30 text-indigo-400 glow-indigo">🧠</div>
                     <div className="absolute inset-0 blur-sm bg-indigo-500/20 rounded-full animate-pulse"></div>
