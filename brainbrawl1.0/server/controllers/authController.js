@@ -91,9 +91,26 @@ if (token) {
 }
 }
 
+// Logout endpoint
+// This endpoint clears the JWT cookie to log out the user
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        return res.json({
+            message: 'Logged out successfully'
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: 'Error during logout'
+        });
+    }
+};
+
 module.exports = {
     test,
     registerUser,
     loginUser,
-    getProfile
+    getProfile,
+    logoutUser
 }

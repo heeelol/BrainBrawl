@@ -1,6 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useContext } from 'react';
+import { UserContext } from '../../context/userContext.jsx';
 
 const navigation = [
     { name: 'Home', href: '/', current: false },
@@ -15,13 +19,22 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
-    return (
-        // <nav>
-        // <Link to="/">Home</Link>
-        // <Link to="/register">Register</Link>
-        // <Link to="/login">Login</Link>
-        // </nav>
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
 
+    const handleLogout = async () => {
+        try {
+            await axios.post('/logout');
+            setUser(null);
+            toast.success('Logged out successfully');
+            navigate('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+            toast.error('Error logging out');
+        }
+    };
+
+    return (
         <Disclosure as="nav" className="bg-gray-800">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
@@ -88,28 +101,28 @@ export default function Navbar() {
                                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                             >
                                 <MenuItem>
-                                    <a
-                                        href="#"
-                                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                                    <Link
+                                        to="/profile"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Your Profile
-                                    </a>
+                                    </Link>
                                 </MenuItem>
                                 <MenuItem>
-                                    <a
-                                        href="#"
-                                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                                    <Link
+                                        to="/settings"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Settings
-                                    </a>
+                                    </Link>
                                 </MenuItem>
                                 <MenuItem>
-                                    <a
-                                        href="#"
-                                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                                     >
                                         Sign out
-                                    </a>
+                                    </button>
                                 </MenuItem>
                             </MenuItems>
                         </Menu>
