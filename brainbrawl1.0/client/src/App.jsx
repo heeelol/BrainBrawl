@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
+import PageTitle from "./components/PageTitle.jsx";
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -26,9 +27,16 @@ function App() {  return (
             </header>
             <Home />
         </>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<>
+            <PageTitle title="Login" />
+            <Login />
+        </>} />
+        <Route path="/register" element={<>
+            <PageTitle title="Register" />
+            <Register />
+        </>}/>
         <Route path="/dashboard" element={<>
+            <PageTitle title="Dashboard" />
             <header className="sticky top-0 z-50 flex justify-center items-center">
                 <div className="xl:max-w-full w-full">
                     <Navbar />

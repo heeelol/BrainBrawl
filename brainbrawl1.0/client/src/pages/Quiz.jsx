@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import {data} from "../assets/data.js";
 import './Quiz.css'
+import PageTitle from "../components/PageTitle.jsx";
 
 export default function Quiz() {
     let [index, setIndex] = useState(0);
@@ -50,6 +51,7 @@ export default function Quiz() {
 
     return (
         <>
+            <PageTitle title="Quiz - General Knowledge" />
             <header className="sticky top-0 z-50 flex justify-center items-center">
                 <div className="xl:max-w-full w-full">
                     <Navbar />
