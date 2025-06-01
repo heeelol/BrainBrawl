@@ -72,6 +72,18 @@ The API responds with appropriate messages for invalid inputs, and all authentic
 
 **Quiz System with Question Pool (Basic Version implemented ✅)**
 
+The quiz system allows users to take quizzes from a pool of questions, with various topics to choose from, providing a variety of engaging quizzes that keeps users interested.
+
+For now, there is only one topic available, which is "General Knowledge". The quiz system is designed to be extensible, allowing for easy addition of new topics and questions in the future.
+
+Currently, the quiz system is entirely frontend-based, with the questions and answers written down in a JavaScript file. When the quiz starts, the system retrieves the questions and their options from the JavaScript file, and the user is presented with these questions and multiple-choice answers, each question at a time. When the user selects an answer for a question, the system will check from the question data if it is correct or not. 
+
+Once the user selects an option, the answer will be revealed instantly, and the user cannot select any other options and has to move onto the next question. If the answer is correct, the user gains 1 point, and if it is incorrect, the user does not lose or gain any points.
+
+After the quiz ends, the user is presented with their score (the number of questions answered correctly). Then the user can exit the quiz interface and return to the dashboard.
+
+In the future, the quiz will also use backend features, such as using the MongoDB database to store and retrieve question data, and more topics and multiplayer battles will be added. The system will also provide feedback on which questions were answered correctly or incorrectly, allowing users to learn from their mistakes.
+
 **Real-time 1v1 Battle Mode (🔜 Milestone 2)**
 
 **XP System, Level Progression (🔜  Milestone 2)**
