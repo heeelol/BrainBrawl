@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useContext } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
+import logo from '../assets/brainbrawl_icon.png';
 
 const navigation = [
     { name: 'Home', href: '/', current: false },
@@ -50,9 +51,9 @@ export default function Navbar() {
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                         <div className="flex shrink-0 items-center">
                             <img
-                                alt="Your Company"
-                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                                className="h-8 w-auto"
+                                alt="BrainBrawl"
+                                src={logo}
+                                className="h-10 w-auto"
                             />
                         </div>
                         <div className="hidden sm:ml-6 sm:block">

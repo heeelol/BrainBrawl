@@ -43,7 +43,7 @@ BrainBrawl is a full-stack MERN web app that turns quiz-based revision into a co
 
 - Frontend: React + Vite + TailwindCSS
 - Backend: Node.js + Express.js
-- Database: MongoDB (hosted bia MongoDB Atlas)
+- Database: MongoDB (hosted via MongoDB Atlas)
 - Auth: JWT + bcrypt
 - Version Control: Git + GitHub
 - Design: Canva (posters), Draw.io (flowcharts), Figma (UI mockups)
