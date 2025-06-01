@@ -85,8 +85,6 @@ Follow these steps to run BrainBrawl locally:
 - Backend API routes are in `brainbrawl1.0/server/routes`
 - Database models are in `brainbrawl1.0/server/models`
 
-**Posters**
-
 **Proposed Level of Achievement**
 
 Apollo 11 — We aim to go beyond basic features with real-time multiplayer, gamification, and user progression systems, fully deployed with complete documentation and UI polish.
