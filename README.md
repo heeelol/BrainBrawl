@@ -18,10 +18,11 @@ Follow these steps to run BrainBrawl locally:
 2. **Clone the Repository**
   
    git clone https://github.com/YourUsername/BrainBrawl.git
+   
    cd BrainBrawl
    
 
-3. **Set Up the Backend**
+4. **Set Up the Backend**
    
    cd brainbrawl1.0/server
    npm install
@@ -40,7 +41,7 @@ Follow these steps to run BrainBrawl locally:
    JWT_SECRET=your_jwt_secret
  
 
-4. **Set Up the Frontend**
+5. **Set Up the Frontend**
 
    cd ../client
    npm install
@@ -54,7 +55,7 @@ Follow these steps to run BrainBrawl locally:
    - Axios for API calls
 
 
-5. **Run the Application**
+6. **Run the Application**
    
    Start the backend server (from the server directory):
 
@@ -66,11 +67,11 @@ Follow these steps to run BrainBrawl locally:
    npm run dev
 
 
-6. **Access the Application**
+7. **Access the Application**
    - Frontend: Open http://localhost:5173 in your browser
    - Backend API: http://localhost:3000
 
-7. **Test Account**
+8. **Test Account**
    - Email: test@gmail.com
    - Password: 123456
 
