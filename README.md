@@ -5,13 +5,86 @@
  - Yap Jia Wei
  - Lee Kuan Yi
 
+**Installation and Setup Guide**
+
+Follow these steps to run BrainBrawl locally:
+
+1. **Prerequisites**
+   - Node.js (v16 or higher)
+   - npm (Node Package Manager)
+   - Git
+   - MongoDB Atlas account (or local MongoDB installation)
+
+2. **Clone the Repository**
+  
+   git clone https://github.com/YourUsername/BrainBrawl.git
+   cd BrainBrawl
+   
+
+3. **Set Up the Backend**
+   
+   cd brainbrawl1.0/server
+   npm install
+
+   The backend includes these key dependencies:
+   - Express.js for the server framework
+   - MongoDB and Mongoose for database operations
+   - JWT and bcrypt for authentication
+   - CORS for cross-origin resource sharing
+   - cookie-parser for handling cookies
+   - nodemon for development auto-reload
+   
+   Create a `.env` file in the server directory with your MongoDB connection string:
+ 
+   MONGODB_URL=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret
+ 
+
+4. **Set Up the Frontend**
+
+   cd ../client
+   npm install
+
+   The frontend includes these key dependencies:
+   - Tailwind CSS for styling
+   - React Hot Toast for notifications
+   - HeadlessUI for UI components
+   - HeroIcons for icons
+   - React Router for navigation
+   - Axios for API calls
+
+
+5. **Run the Application**
+   
+   Start the backend server (from the server directory):
+
+   npm start
+
+   
+   Start the frontend development server (from the client directory):
+
+   npm run dev
+
+
+6. **Access the Application**
+   - Frontend: Open http://localhost:5173 in your browser
+   - Backend API: http://localhost:3000
+
+7. **Test Account**
+   - Email: test@gmail.com
+   - Password: 123456
+
+**Troubleshooting**
+- If you encounter CORS issues, ensure both frontend and backend servers are running
+- For database connection issues, verify your MongoDB connection string in the `.env` file
+- Make sure all required ports (3000 for backend, 5173 for frontend) are available
+
+**Development**
+- Frontend code is in `brainbrawl1.0/client/src`
+- Backend API routes are in `brainbrawl1.0/server/routes`
+- Database models are in `brainbrawl1.0/server/models`
+
 **Posters**
-
-**Proof-of-Concept**
-- How to run the application: 
-- Test account email: test@gmail.com
-- Test account password: 123456
-
 
 **Proposed Level of Achievement**
 
