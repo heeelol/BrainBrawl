@@ -15,7 +15,7 @@
 
 **Proposed Level of Achievement**
 
-Apollo 11 -  We aim to go beyond basic features with real-time multiplayer, gamification, and user progression systems, fully deployed with complete documentation and UI polish.
+Apollo 11 — We aim to go beyond basic features with real-time multiplayer, gamification, and user progression systems, fully deployed with complete documentation and UI polish.
 	
 **Aim**
 
@@ -85,4 +85,4 @@ The API responds with appropriate messages for invalid inputs, and all authentic
 **Cosmetic Shop (🔜  Milestone 3)**
 
 **Work Log**
-- Refer to spreadsheet: 
+- Refer to spreadsheet: https://nusu-my.sharepoint.com/:x:/r/personal/e1398391_u_nus_edu/Documents/Orbital%20Project%20Log.xlsx?d=w4f56c5a81a944623ae50481b5c01b7a7&csf=1&web=1&e=Hedxqs
