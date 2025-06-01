@@ -11,7 +11,6 @@ import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
-import PrivateRoute from './components/PrivateRoute.jsx';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
@@ -36,22 +35,16 @@ function App() {  return (
             <PageTitle title="Register" />
             <Register />
         </>}/>
-        <Route path="/dashboard" element={
-          <PrivateRoute>
+        <Route path="/dashboard" element={<>
             <PageTitle title="Dashboard" />
             <header className="sticky top-0 z-50 flex justify-center items-center">
                 <div className="xl:max-w-full w-full">
                     <Navbar />
                 </div>
             </header>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-        <Route path="/quiz" element={
-          <PrivateRoute>
-            <Quiz />
-          </PrivateRoute>
-        } />
+          <Dashboard />
+        </>} />
+        <Route path="/quiz" element={<Quiz />} />
       </Routes>
     </UserContextProvider> 
   )
