@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import {Bars3Icon, BellIcon, UserCircleIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useContext } from 'react';
@@ -89,11 +89,12 @@ export default function Navbar() {
                                 <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
                                     <span className="absolute -inset-1.5" />
                                     <span className="sr-only">Open user menu</span>
-                                    <img
-                                        alt=""
-                                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                        className="size-8 rounded-full"
-                                    />
+                                    {/*<img*/}
+                                    {/*    alt=""*/}
+                                    {/*    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"*/}
+                                    {/*    className="size-8 rounded-full"*/}
+                                    {/*/>*/}
+                                    <UserCircleIcon aria-hidden="true" className="size-8 rounded-full text-gray-400" />
                                 </MenuButton>
                             </div>
                             <MenuItems
