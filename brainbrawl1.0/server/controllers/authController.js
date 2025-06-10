@@ -107,10 +107,27 @@ const logoutUser = async (req, res) => {
     }
 };
 
+const requireAuth = (req, res, next) => {
+    const {token} = req.cookies;
+
+    if (!token) {
+        return res.status(401).json({error: 'Unauthorized access'});
+    }
+
+    try {
+        const verified = jwt.verify(token, process.env.JWT_SECRET);;
+        req.user = verified;
+        next();
+    } catch (error) {
+        res.status(401).json({error: "Invalid token"});
+    }
+}
+
 module.exports = {
     test,
     registerUser,
     loginUser,
     getProfile,
-    logoutUser
+    logoutUser,
+    requireAuth
 }

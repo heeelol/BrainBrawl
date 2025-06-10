@@ -11,11 +11,13 @@ import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
+import ProtectedRoute from './components/ProtectedRoute'; // Add this import
 
 axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.withCredentials = true; // Enable sending cookies with requests
+axios.defaults.withCredentials = true;
 
-function App() {  return (
+function App() {
+  return (
     <UserContextProvider>
       <Toaster position='bottom-right' toastOptions={{duration: 2000}} />
       <Routes>
@@ -35,16 +37,24 @@ function App() {  return (
             <PageTitle title="Register" />
             <Register />
         </>}/>
-        <Route path="/dashboard" element={<>
-            <PageTitle title="Dashboard" />
-            <header className="sticky top-0 z-50 flex justify-center items-center">
-                <div className="xl:max-w-full w-full">
-                    <Navbar />
-                </div>
-            </header>
-          <Dashboard />
-        </>} />
-        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <>
+              <PageTitle title="Dashboard" />
+              <header className="sticky top-0 z-50 flex justify-center items-center">
+                  <div className="xl:max-w-full w-full">
+                      <Navbar />
+                  </div>
+              </header>
+              <Dashboard />
+            </>
+          </ProtectedRoute>
+        } />
+        <Route path="/quiz" element={
+          <ProtectedRoute>
+            <Quiz />
+          </ProtectedRoute>
+        } />
       </Routes>
     </UserContextProvider> 
   )
