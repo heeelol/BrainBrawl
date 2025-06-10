@@ -4,8 +4,12 @@ import Navbar from "../components/Navbar.jsx";
 import {data} from "../assets/data.js";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 export default function Quiz() {
+    // Add new state for timer control
+    const [isPaused, setIsPaused] = useState(false);
+
     let [index, setIndex] = useState(0);
     let [questions, setQuestions] = useState(data[index]);
     let [lock, setLock] = useState(false);
@@ -17,6 +21,17 @@ export default function Quiz() {
     let option3 = useRef(null);
     let option4 = useRef(null);
     let options = [option1, option2, option3, option4];
+
+    const renderTime = ({ remainingTime }) => {
+        if (remainingTime === 0) {
+            return <div className="timer-display">Time's Up!</div>;
+        }
+        return (
+            <div className="timer-display">
+                {remainingTime}
+            </div>
+        );
+    };
 
     const checkAnswer = (selectedOption, ans) => {
         if (!lock) {
@@ -32,6 +47,35 @@ export default function Quiz() {
             setLock(true);
         }
     }
+
+    const showCorrectAnswerAndProceed = () => {
+        setIsPaused(true); // Pause the timer
+        
+        // Show timeout indicator and correct answer
+        const selectedAnswer = options[questions.ans - 1].current;
+        options.forEach(option => {
+            if (option.current === selectedAnswer) {
+                option.current.classList.add('correct');
+            } else {
+                option.current.classList.add('timeout');
+            }
+        });
+        
+        // Wait 2 seconds then proceed
+        setTimeout(() => {
+            if (index === data.length - 1) {
+                setResult(true);
+            } else {
+                setIndex(prevIndex => prevIndex + 1);
+                setQuestions(data[index + 1]);
+                options.forEach(option => {
+                    option.current.classList.remove('correct', 'incorrect', 'timeout');
+                });
+            }
+            setLock(false);
+            setIsPaused(false); // Resume timer
+        }, 2000);
+    };
 
     const nextQuestion = () => {
         if (lock) {
@@ -67,6 +111,23 @@ export default function Quiz() {
                             Answer questions, earn points, and climb the leaderboard!
                         </p>
                     </div>
+                </div>
+
+                <div className="fixed top-20 right-8 z-50">
+                    <CountdownCircleTimer
+                        key={index}
+                        isPlaying={!isPaused}
+                        duration={10}
+                        size={120}
+                        colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                        colorsTime={[10, 6, 3, 0]}
+                        onComplete={() => {
+                            showCorrectAnswerAndProceed();
+                            return { shouldRepeat: true, delay: 1 };
+                        }}
+                    >
+                        {renderTime}
+                    </CountdownCircleTimer>
                 </div>
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

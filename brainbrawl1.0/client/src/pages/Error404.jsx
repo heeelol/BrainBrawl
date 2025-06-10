@@ -13,7 +13,6 @@ export default function NotFound() {
                         className="inline-flex items-center px-6 py-3 text-lg font-medium text-center text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 transition-all duration-300 hover:scale-105"
                     >
                        &larr; Return Home
-
                     </Link>
                 </div>   
             </div>
