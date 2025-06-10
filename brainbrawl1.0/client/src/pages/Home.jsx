@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 function AnimatedBackground() {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute left-1/3 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute left-1/5 top-1/3 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="relative animate-float-left">
                     <div className="text-9xl opacity-30 text-indigo-400 glow-indigo">🧠</div>
                     <div className="absolute inset-0 blur-sm bg-indigo-500/20 rounded-full animate-pulse"></div>
                 </div>
             </div>
-            <div className="absolute right-1/3 top-1/2 transform translate-x-1/2 -translate-y-1/2">
+            <div className="absolute right-1/5 top-1/3 transform translate-x-1/2 -translate-y-1/2">
                 <div className="relative animate-float-right">
                     <div className="text-9xl opacity-30 text-red-400 scale-x-[-1] glow-red">🧠</div>
                     <div className="absolute inset-0 blur-sm bg-red-500/20 rounded-full animate-pulse"></div>
@@ -27,7 +27,6 @@ export default function Home() {
     return (
         <div className="relative min-h-screen bg-gradient-to-b from-gray-900 to-indigo-900">
             <AnimatedBackground />
-            {/* Hero Section */}
             <div className="relative overflow-hidden">
                 <div className="max-w-7xl mx-auto">
                     <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32">
@@ -64,7 +63,7 @@ export default function Home() {
                 </div>
             </div>
 
-            {/* Features Section */}
+      
             <div className="py-12 bg-gray-900 bg-opacity-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mt-10">
