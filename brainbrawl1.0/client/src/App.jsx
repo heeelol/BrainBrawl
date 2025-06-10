@@ -5,6 +5,7 @@ import Navbar_2 from "./components/Navbar_2.jsx";
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import NotFound from './pages/Error404.jsx';
 import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import {UserContextProvider} from '../context/userContext.jsx';
@@ -21,6 +22,7 @@ function App() {
     <UserContextProvider>
       <Toaster position='bottom-right' toastOptions={{duration: 2000}} />
       <Routes>
+        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<>
             <header className="sticky top-0 z-50 flex justify-center items-center">
                 <div className="xl:max-w-full w-full">
