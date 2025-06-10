@@ -7,13 +7,16 @@ import { useContext } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 import logo from '../assets/brainbrawl_icon.png';
 
-const navigation = [
+// Update navigation to be dynamic based on auth state
+const getNavigation = (isAuthenticated) => [
     { name: 'Home', href: '/', current: false },
-    { name: 'Dashboard', href: '/dashboard', current: false },
-    { name: 'Shop', href: '#', current: false },
-    { name: 'Leaderboard', href: '#', current: false },
-    { name: 'Social', href: '#', current: false },
-]
+    ...(isAuthenticated ? [
+        { name: 'Dashboard', href: '/dashboard', current: false },
+        { name: 'Shop', href: '#', current: false },
+        { name: 'Leaderboard', href: '#', current: false },
+        { name: 'Social', href: '#', current: false },
+    ] : [])
+];
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -22,6 +25,7 @@ function classNames(...classes) {
 export default function Navbar() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
+    const navigation = getNavigation(!!user);
 
     const handleLogout = async () => {
         try {
@@ -33,6 +37,16 @@ export default function Navbar() {
             console.error('Logout error:', error);
             toast.error('Error logging out');
         }
+    };
+
+    const handleNavigation = (e, href) => {
+        e.preventDefault();
+        if (!user && (href === '/dashboard' || href === '/quiz')) {
+            toast.error('You must be logged in to access this page');
+            navigate('/login');
+            return;
+        }
+        navigate(href);
     };
 
     return (
@@ -62,10 +76,10 @@ export default function Navbar() {
                                     <a
                                         key={item.name}
                                         href={item.href}
-                                        aria-current={item.current ? 'page' : undefined}
+                                        onClick={(e) => handleNavigation(e, item.href)}
                                         className={classNames(
                                             item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                            'rounded-md px-3 py-2 text-sm font-medium',
+                                            'rounded-md px-3 py-2 text-sm font-medium'
                                         )}
                                     >
                                         {item.name}
@@ -139,10 +153,10 @@ export default function Navbar() {
                             key={item.name}
                             as="a"
                             href={item.href}
-                            aria-current={item.current ? 'page' : undefined}
+                            onClick={(e) => handleNavigation(e, item.href)}
                             className={classNames(
                                 item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                'block rounded-md px-3 py-2 text-base font-medium',
+                                'block rounded-md px-3 py-2 text-base font-medium'
                             )}
                         >
                             {item.name}
@@ -151,5 +165,5 @@ export default function Navbar() {
                 </div>
             </DisclosurePanel>
         </Disclosure>
-    )
+    );
 }

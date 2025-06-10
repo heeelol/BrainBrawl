@@ -1,9 +1,15 @@
 import { useContext } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
     const {user} = useContext(UserContext);
-    
+    const navigate = useNavigate();
+
+    const handleNavigation = (path) => {
+        navigate(path);
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
             <div className="pt-16 px-4 sm:px-6 lg:px-8"> {/* Added pt-16 to account for Navbar height */}
@@ -35,11 +41,11 @@ export default function Dashboard() {
                     {/* Dashboard content will go here */}
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {/* Placeholder cards for dashboard content */}
-                        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg hover:transform hover:scale-105 transition duration-300">
-                            <a href="/quiz" className="block">
+                        <div onClick={()=>{handleNavigation('/quiz')}} className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg hover:transform hover:scale-105 transition duration-300">
+                            <div className="block">
                                 <h2 className="text-xl font-semibold text-white mb-4">General Knowledge</h2>
                                 <p className="text-gray-300">Everything under the sun!</p>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
