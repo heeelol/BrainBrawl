@@ -4,7 +4,7 @@
   "description": "A competitive quiz battle application",
   "scripts": {
     "client": "cd client && npm run dev",
-    "server": "cd server && npm run dev",
+    "server": "cd server && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
