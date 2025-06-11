@@ -7,7 +7,10 @@ const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth } = r
 router.use(
     cors({
         credentials: true,
-        origin: 'http://localhost:5173'
+        origin: ['http://localhost:5173', 'https://your-vercel-app-url.vercel.app'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true
     })
 );
 
