@@ -14,7 +14,7 @@ import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
 import ProtectedRoute from './components/ProtectedRoute'; // Add this import
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 
 function App() {
