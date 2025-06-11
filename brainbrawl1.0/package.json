@@ -1,15 +1,13 @@
 {
   "name": "brainbrawl",
   "version": "1.0.0",
-  "description": "Quiz Application",
-  "main": "index.js",
+  "description": "A competitive quiz battle application",
   "scripts": {
-    "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install-deps": "npm install && cd server && npm install && cd ../client && npm install"
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.0.1"
   }
 }
