@@ -17,10 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:5173'
+    origin: ['http://localhost:5173', 'https://brainbrawl-frontend-refg33nmk-heeelols-projects.vercel.app']
 }));
 
 app.use('/', require('./routes/authRoutes'));
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
