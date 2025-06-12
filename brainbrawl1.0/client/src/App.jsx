@@ -7,7 +7,6 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import NotFound from './pages/Error404.jsx';
 import axios from 'axios';
-import API_URL from './config/api';
 import { Toaster } from 'react-hot-toast';
 import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
@@ -15,7 +14,7 @@ import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
 import ProtectedRoute from './components/ProtectedRoute'; // Add this import
 
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
