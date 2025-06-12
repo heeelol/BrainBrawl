@@ -51,22 +51,30 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const {email, password} = req.body;
-
-        // Check if user exists
-        const user = await User.findOne({email})
+        const user = await User.findOne({email});
+        
         if (!user) {
             return res.json({
                 error: 'User not found'
-            })
+            });
         }
 
-        // Check if password is correct
         const match = await comparePassword(password, user.password);
         if (match) {
-            jwt.sign({email: user.email, id: user._id, name: user.name}, process.env.JWT_SECRET, {}, (err, token) => {
-                if (err) throw err;
-                res.cookie('token', token).json(user)
-            })
+            jwt.sign(
+                {email: user.email, id: user._id, name: user.name}, 
+                process.env.JWT_SECRET, 
+                {}, 
+                (err, token) => {
+                    if (err) throw err;
+                    res.cookie('token', token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                        path: '/'
+                    }).json(user);
+                }
+            );
         }
 
         if (!match) {
@@ -80,15 +88,18 @@ const loginUser = async (req, res) => {
 }
 
 const getProfile = (req, res) => {
-const {token} = req.cookies;
-if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
-        if (err) throw err;
-        res.json(user);
-    })
-} else {
-    res.json(null);
-}
+    const {token} = req.cookies;
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+            if (err) throw err;
+            res.set({
+                'Access-Control-Allow-Origin': 'https://brainbrawl-frontend.vercel.app',
+                'Access-Control-Allow-Credentials': 'true'
+            }).json(user);
+        });
+    } else {
+        res.json(null);
+    }
 }
 
 // Logout endpoint

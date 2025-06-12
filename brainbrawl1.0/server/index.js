@@ -17,7 +17,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:5173', 'https://brainbrawl-frontend.vercel.app/']
+    origin: [
+        'http://localhost:5173',
+        'https://brainbrawl-frontend.vercel.app'
+    ]
 }));
 
 app.use('/', require('./routes/authRoutes'));
