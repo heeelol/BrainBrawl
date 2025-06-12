@@ -15,20 +15,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://brainbrawl-frontend.vercel.app'
-];
-
 app.use(cors({
     credentials: true,
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: ['https://brainbrawl-frontend.vercel.app', 'http://localhost:5173',]
 }));
 
 app.use('/', require('./routes/authRoutes'));
