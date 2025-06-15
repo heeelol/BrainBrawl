@@ -3,11 +3,16 @@ const router = express.Router();
 const cors = require('cors');
 const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth } = require('../controllers/authController');
 
+// Define frontend URL
+const FRONTEND_URL = process.env.NODE_ENV === 'production'
+    ? 'https://brainbrawl-frontend.vercel.app'
+    : 'http://localhost:5173';
+
 //middleware
 router.use(
     cors({
         credentials: true,
-        origin: 'http://localhost:5173'
+        origin: FRONTEND_URL
     })
 );
 
