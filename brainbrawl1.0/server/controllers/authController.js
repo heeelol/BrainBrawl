@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const General = require('../models/quiz');
 const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
 
@@ -134,11 +135,22 @@ const requireAuth = (req, res, next) => {
     }
 }
 
+const getQuizQuestions = async (req, res) => {
+    try {
+        // const {ans, option1, option2, option3, option4, question} = req.body;
+        const questions = await General.find({});
+        res.json(questions);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch quiz data' });
+    }
+};
+
 module.exports = {
     test,
     registerUser,
     loginUser,
     getProfile,
     logoutUser,
-    requireAuth
+    requireAuth,
+    getQuizQuestions
 }

@@ -1,26 +1,77 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
-import {data} from "../assets/data.js";
+// import {data} from "../assets/data.js";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import axios from "axios";
 
 export default function Quiz() {
     // Add new state for timer control
-    const [isPaused, setIsPaused] = useState(false);
+    // const [isPaused, setIsPaused] = useState(false);
 
+    // let [index, setIndex] = useState(0);
+    // let [questions, setQuestions] = useState(data[index]);
+    // let [lock, setLock] = useState(false);
+    // let [score, setScore] = useState(0);
+    // let [result, setResult] = useState(false);
+
+    const [quizData, setQuizData] = useState([]);
     let [index, setIndex] = useState(0);
-    let [questions, setQuestions] = useState(data[index]);
-    let [lock, setLock] = useState(false);
-    let [score, setScore] = useState(0);
-    let[result, setResult] = useState(false);
+    const [questions, setQuestions] = useState(null);
+    const [lock, setLock] = useState(false);
+    const [score, setScore] = useState(0);
+    const [result, setResult] = useState(false);
+
+    // Add new state for timer control
+    const [isPaused, setIsPaused] = useState(false);
 
     let option1 = useRef(null);
     let option2 = useRef(null);
     let option3 = useRef(null);
     let option4 = useRef(null);
     let options = [option1, option2, option3, option4];
+
+    useEffect(() => {
+        axios.get('/quiz')
+            .then(res => {
+                setQuizData(res.data);
+                setQuestions(res.data[index]);
+            })
+            // .then(data => {
+            //     setQuizData(data);
+            //     setQuestions(data[0]);
+            // })
+            .catch(err => console.error(err));
+    }, []);
+
+    // useEffect(() => {
+    //     const fetchQuestions = async () => {
+    //         try {
+    //             const response = await axios.get('/quiz'); // Fetch users from our API
+    //             setQuizData(response.data); // Update state with fetched users
+    //             setQuestions(response.data[index]); // Set the first question
+    //         } catch (error) {
+    //             console.error('Error fetching questions:', error);
+    //         }
+    //     };
+    //
+    //     fetchQuestions();
+    // }, []);
+
+    console.log(quizData);
+    console.log(questions);
+
+    // ...rest of your logic, but replace all `data` with `quizData`
+    // For example, use quizData.length instead of data.length
+    // and setQuestions(quizData[index + 1]) when moving to next question
+
+    // In your render, use:
+    // {questions && ...} to ensure questions is loaded before rendering
+
+    // Example for score:
+    // <p>Your Score: {score}/{quizData.length}</p>
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {
@@ -63,11 +114,11 @@ export default function Quiz() {
         
         // Wait 2 seconds then proceed
         setTimeout(() => {
-            if (index === data.length - 1) {
+            if (index === quizData.length - 1) {
                 setResult(true);
             } else {
                 setIndex(prevIndex => prevIndex + 1);
-                setQuestions(data[index + 1]);
+                setQuestions(quizData[index + 1]);
                 options.forEach(option => {
                     option.current.classList.remove('correct', 'incorrect', 'timeout');
                 });
@@ -79,12 +130,12 @@ export default function Quiz() {
 
     const nextQuestion = () => {
         if (lock) {
-            if (index === data.length - 1) {
+            if (index === quizData.length - 1) {
                 setResult(true);
                 return 0;
             }
             setIndex(++index);
-            setQuestions(data[index]);
+            setQuestions(quizData[index]);
             setLock(false);
             options.map((option) => {
                 option.current.classList.remove('correct', 'incorrect');
@@ -137,7 +188,7 @@ export default function Quiz() {
                             {result ? <>
                                 <div className="text-center">
                                     <h3 className="text-2xl font-bold text-gray-200">Quiz Completed!</h3>
-                                    <p className="mt-2 text-lg text-gray-300">Your Score: {score}/{data.length}</p>
+                                    <p className="mt-2 text-lg text-gray-300">Your Score: {score}/{quizData.length}</p>
                                     <Link to="/dashboard" className="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
                                         Back to Dashboard
                                     </Link>
@@ -170,7 +221,7 @@ export default function Quiz() {
                                     </button>
                                 </div>
 
-                                <div className="mt-2 text-center text-gray-400">{index + 1} of {data.length} questions</div>
+                                <div className="mt-2 text-center text-gray-400">{index + 1} of {quizData.length} questions</div>
                             </>}
 
                         </div>

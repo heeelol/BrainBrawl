@@ -12,7 +12,8 @@ import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
-import ProtectedRoute from './components/ProtectedRoute'; // Add this import
+import ProtectedRoute from './components/ProtectedRoute';
+import {Sidebar} from "./components/Sidebar.jsx"; // Add this import
 
 axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
 axios.defaults.withCredentials = true;
@@ -49,7 +50,14 @@ function App() {
                       <Navbar />
                   </div>
               </header>
-              <Dashboard />
+              <div className="flex">
+                  <div className="w-auto fixed bg-gray-800 bg-opacity-50 backdrop-blur-lg">
+                    <Sidebar />
+                  </div>
+                  <div className="w-full">
+                    <Dashboard />
+                  </div>
+              </div>
             </>
           </ProtectedRoute>
         } />
