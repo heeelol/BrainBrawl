@@ -13,7 +13,7 @@ const userSchema = new Schema({
     question: String,
 });
 
-const General = mongoose.model('General', userSchema, 'generalquiz'); // third arg is the collection name
+const General = mongoose.model('generalquiz', userSchema, 'generalquiz'); // third arg is the collection name
 
 // // 3. Retrieve all documents
 // General.find({}, (err, generalquiz) => {
