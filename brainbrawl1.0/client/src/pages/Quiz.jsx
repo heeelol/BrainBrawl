@@ -195,7 +195,11 @@ export default function Quiz() {
                                 </div>
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
-                                    {index + 1}. {questions.question}
+                                    {index + 1}.
+                                    {quizData.map((questions) => {
+                                        return questions.question;
+                                    })}
+                                    {/*{questions.question}*/}
                                 </h2>
 
                                 <div className="relative mt-5"> {/* Divider without text */}
@@ -206,10 +210,26 @@ export default function Quiz() {
                                 </div>
 
                                 <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
-                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>{questions.option1}</li>
-                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>{questions.option2}</li>
-                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>{questions.option3}</li>
-                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>{questions.option4}</li>
+                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
+                                        {quizData.map((questions) => {
+                                            return questions.option1;
+                                        })}
+                                    </li>
+                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
+                                        {quizData.map((questions) => {
+                                            return questions.option2;
+                                        })}
+                                    </li>
+                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
+                                        {quizData.map((questions) => {
+                                            return questions.option3;
+                                        })}
+                                    </li>
+                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
+                                        {quizData.map((questions) => {
+                                            return questions.option4;
+                                        })}
+                                    </li>
                                 </ul>
 
                                 <div className="mt-6">
