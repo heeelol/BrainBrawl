@@ -45,12 +45,23 @@ export default function Quiz() {
                 options[questions.ans - 1].current.classList.add('correct'); // Highlight the correct answer
             }
             setLock(true);
+            setTimeout(() => {
+                if (index === data.length - 1) {
+                    setResult(true);
+                } else {
+                    setIndex(prevIndex => prevIndex + 1);
+                    setQuestions(data[index + 1]);
+                    options.forEach(option => {
+                        option.current.classList.remove('correct', 'incorrect', 'timeout');
+                    });
+                }
+                setLock(false);
+            }, 1200); // Short delay for feedback
         }
     }
 
     const showCorrectAnswerAndProceed = () => {
         setIsPaused(true); // Pause the timer
-        
         // Show timeout indicator and correct answer
         const selectedAnswer = options[questions.ans - 1].current;
         options.forEach(option => {
@@ -60,7 +71,6 @@ export default function Quiz() {
                 option.current.classList.add('timeout');
             }
         });
-        
         // Wait 2 seconds then proceed
         setTimeout(() => {
             if (index === data.length - 1) {
@@ -76,22 +86,6 @@ export default function Quiz() {
             setIsPaused(false); // Resume timer
         }, 2000);
     };
-
-    const nextQuestion = () => {
-        if (lock) {
-            if (index === data.length - 1) {
-                setResult(true);
-                return 0;
-            }
-            setIndex(++index);
-            setQuestions(data[index]);
-            setLock(false);
-            options.map((option) => {
-                option.current.classList.remove('correct', 'incorrect');
-                return null;
-            });
-        }
-    }
 
     return (
         <>
@@ -131,8 +125,7 @@ export default function Quiz() {
                 </div>
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                    <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
-
+                    <div className="quiz-card">
                         <div className="mt-0">
                             {result ? <>
                                 <div className="text-center">
@@ -160,15 +153,6 @@ export default function Quiz() {
                                     <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>{questions.option3}</li>
                                     <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>{questions.option4}</li>
                                 </ul>
-
-                                <div className="mt-6">
-                                    <button
-                                        onClick={nextQuestion}
-                                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105"
-                                    >
-                                        Next Question
-                                    </button>
-                                </div>
 
                                 <div className="mt-2 text-center text-gray-400">{index + 1} of {data.length} questions</div>
                             </>}

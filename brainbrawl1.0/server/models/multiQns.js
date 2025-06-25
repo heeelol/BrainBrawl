@@ -1,4 +1,4 @@
-export const multiQns = [
+const multiQns = [
     {
         question: "What is the capital of France?",
         answers: [
@@ -176,3 +176,5 @@ export const multiQns = [
         ],
     },
 ];
+
+module.exports = { multiQns };

@@ -1,21 +1,82 @@
 @import "tailwindcss";
 
 .QuizList {
-    @apply py-2 px-4 border-2 border-solid border-gray-700 rounded-md shadow-sm text-sm text-gray-200 bg-transparent
-    hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid #374151;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px 0 rgba(31,41,55,0.15);
+    background: rgba(31,41,55,0.6);
+    color: #e5e7eb;
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    backdrop-filter: blur(2px);
+}
+
+.QuizList:hover {
+    background: #4338ca;
+    color: #fff;
+    transform: scale(1.03);
+    z-index: 2;
+}
+
+.QuizList:active {
+    transform: scale(0.97);
 }
 
 .QuizList.timeout {
-    background-color: black;
-    border: red 2px solid;
-    color: red;
-    transition: all 0.3s ease;
+    background: linear-gradient(90deg, #2d3748 0%, #a30000 100%);
+    border: 2px solid #a30000;
+    color: #ff6b6b;
+    opacity: 0.7;
+    font-weight: 600;
+    filter: blur(0.5px);
 }
 
 .correct {
-    @apply bg-green-300 hover:bg-green-800 text-gray-800 hover:text-gray-200;
+    background: linear-gradient(90deg, #bbf7d0 0%, #22d3ee 100%);
+    color: #111827;
+    border: 2px solid #22d3ee;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px 0 rgba(34,211,238,0.15);
+    animation: pop 0.25s cubic-bezier(0.4,0,0.2,1);
 }
 
 .incorrect {
-    @apply bg-red-300 hover:bg-red-800 text-gray-800 hover:text-gray-200;
+    background: linear-gradient(90deg, #fca5a5 0%, #f87171 100%);
+    color: #111827;
+    border: 2px solid #f87171;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px 0 rgba(248,113,113,0.15);
+    animation: pop 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes pop {
+    0% { transform: scale(1); }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.timer-display {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #818cf8;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px #312e81;
+    filter: drop-shadow(0 2px 8px #312e81);
+}
+
+.quiz-card {
+    background: rgba(31,41,55,0.6);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px 0 rgba(31,41,55,0.25);
+    border: 1.5px solid rgba(99,102,241,0.15);
+    padding: 2.5rem 1.5rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow 0.3s, background 0.3s;
 }
