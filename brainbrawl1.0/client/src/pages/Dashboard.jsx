@@ -47,6 +47,12 @@ export default function Dashboard() {
                                 <p className="text-gray-300">Everything under the sun!</p>
                             </div>
                         </div>
+                        <div onClick={()=>{handleNavigation('/multiplayer')}} className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg hover:transform hover:scale-105 transition duration-300">
+                            <div className="block">
+                                <h2 className="text-xl font-semibold text-white mb-4">Multiplayer</h2>
+                                <p className="text-gray-300">Join a room and fight against your opponents!</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

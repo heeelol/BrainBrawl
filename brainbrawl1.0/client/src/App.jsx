@@ -12,7 +12,8 @@ import {UserContextProvider} from '../context/userContext.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
-import ProtectedRoute from './components/ProtectedRoute'; // Add this import
+import ProtectedRoute from './components/ProtectedRoute';
+import Multiplayer from "./pages/Multiplayer.jsx"; // Add this import
 
 axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
 axios.defaults.withCredentials = true;
@@ -55,7 +56,12 @@ function App() {
         } />
         <Route path="/quiz" element={
           <ProtectedRoute>
-            <Quiz />
+              <Quiz />
+          </ProtectedRoute>
+        } />
+        <Route path="/multiplayer" element={
+          <ProtectedRoute>
+              <Multiplayer />
           </ProtectedRoute>
         } />
       </Routes>
