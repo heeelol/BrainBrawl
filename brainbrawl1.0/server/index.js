@@ -47,7 +47,7 @@ const port = 8000 || process.env.PORT;
 
 // Start the server
 server.listen(port, () => {
-    console.log(`Server is runnaing on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
 
 // Socket.IO setup
