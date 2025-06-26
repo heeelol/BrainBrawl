@@ -4,9 +4,7 @@ const cors = require('cors');
 const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions} = require('../controllers/authController');
 
 // Define frontend URL
-const FRONTEND_URL = process.env.NODE_ENV === 'production'
-    ? 'https://brainbrawl-frontend.vercel.app'
-    : 'http://localhost:5173';
+const FRONTEND_URL = 'http://localhost:5173';
 
 //middleware
 router.use(

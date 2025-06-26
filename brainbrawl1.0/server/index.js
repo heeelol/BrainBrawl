@@ -6,9 +6,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 // Define frontend URL
-const FRONTEND_URL = process.env.NODE_ENV === 'production'
-    ? 'https://brainbrawl-frontend.vercel.app'
-    : 'http://localhost:5173';
+const FRONTEND_URL = 'http://localhost:5173';
 
 // database connection to MongoDB
 mongoose.connect(process.env.MONGO_URL)
@@ -32,5 +30,5 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use('/', require('./routes/authRoutes'));
 
-const port = process.env.PORT || 8000;
+const port = 8000 || process.env.PORT;
 app.listen(port, () => console.log(`Server is running on port ${port}`));

@@ -1,7 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
-// import {data} from "../assets/data.js";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -19,7 +18,7 @@ export default function Quiz() {
 
     const [quizData, setQuizData] = useState([]);
     let [index, setIndex] = useState(0);
-    const [questions, setQuestions] = useState(null);
+    const [questions, setQuestions] = useState([]);
     const [lock, setLock] = useState(false);
     const [score, setScore] = useState(0);
     const [result, setResult] = useState(false);
@@ -59,9 +58,6 @@ export default function Quiz() {
     //
     //     fetchQuestions();
     // }, []);
-
-    console.log(quizData);
-    console.log(questions);
 
     // ...rest of your logic, but replace all `data` with `quizData`
     // For example, use quizData.length instead of data.length
@@ -144,6 +140,13 @@ export default function Quiz() {
         }
     }
 
+    console.log(quizData);
+    console.log(questions);
+    console.log(index);
+    //console.log(questions.question);
+    //console.log(questions["option1"]);
+    //console.log(quizData[0]);
+
     return (
         <>
             <PageTitle title="Quiz - General Knowledge" />
@@ -196,10 +199,10 @@ export default function Quiz() {
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
                                     {index + 1}.
-                                    {quizData.map((questions) => {
-                                        return questions.question;
-                                    })}
-                                    {/*{questions.question}*/}
+                                    {/*{quizData.map((qns) => {*/}
+                                    {/*    return qns.question;*/}
+                                    {/*})}*/}
+                                    {questions.question}
                                 </h2>
 
                                 <div className="relative mt-5"> {/* Divider without text */}
@@ -211,24 +214,16 @@ export default function Quiz() {
 
                                 <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
                                     <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
-                                        {quizData.map((questions) => {
-                                            return questions.option1;
-                                        })}
+                                        {questions.option1}
                                     </li>
                                     <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
-                                        {quizData.map((questions) => {
-                                            return questions.option2;
-                                        })}
+                                        {questions.option2}
                                     </li>
                                     <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
-                                        {quizData.map((questions) => {
-                                            return questions.option3;
-                                        })}
+                                        {questions.option3}
                                     </li>
                                     <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
-                                        {quizData.map((questions) => {
-                                            return questions.option4;
-                                        })}
+                                        {questions.option4}
                                     </li>
                                 </ul>
 
