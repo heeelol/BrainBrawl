@@ -1,26 +1,39 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
-import {data} from "../assets/data.js";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
+import axios from "axios";
 
 export default function Quiz() {
     // Add new state for timer control
-    const [isPaused, setIsPaused] = useState(false);
+    // const [isPaused, setIsPaused] = useState(false);
 
+    const [quizData, setQuizData] = useState([]);
     let [index, setIndex] = useState(0);
-    let [questions, setQuestions] = useState(data[index]);
-    let [lock, setLock] = useState(false);
-    let [score, setScore] = useState(0);
-    let[result, setResult] = useState(false);
+    const [questions, setQuestions] = useState([]);
+    const [lock, setLock] = useState(false);
+    const [score, setScore] = useState(0);
+    const [result, setResult] = useState(false);
+
+    // Add new state for timer control
+    const [isPaused, setIsPaused] = useState(false);
 
     let option1 = useRef(null);
     let option2 = useRef(null);
     let option3 = useRef(null);
     let option4 = useRef(null);
     let options = [option1, option2, option3, option4];
+
+    useEffect(() => {
+        axios.get('/quiz')
+            .then(res => {
+                setQuizData(res.data);
+                setQuestions(res.data[index]);
+            })
+            .catch(err => console.error(err));
+    }, []);
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {
@@ -45,23 +58,12 @@ export default function Quiz() {
                 options[questions.ans - 1].current.classList.add('correct'); // Highlight the correct answer
             }
             setLock(true);
-            setTimeout(() => {
-                if (index === data.length - 1) {
-                    setResult(true);
-                } else {
-                    setIndex(prevIndex => prevIndex + 1);
-                    setQuestions(data[index + 1]);
-                    options.forEach(option => {
-                        option.current.classList.remove('correct', 'incorrect', 'timeout');
-                    });
-                }
-                setLock(false);
-            }, 1200); // Short delay for feedback
         }
     }
 
     const showCorrectAnswerAndProceed = () => {
         setIsPaused(true); // Pause the timer
+
         // Show timeout indicator and correct answer
         const selectedAnswer = options[questions.ans - 1].current;
         options.forEach(option => {
@@ -71,13 +73,14 @@ export default function Quiz() {
                 option.current.classList.add('timeout');
             }
         });
+
         // Wait 2 seconds then proceed
         setTimeout(() => {
-            if (index === data.length - 1) {
+            if (index === quizData.length - 1) {
                 setResult(true);
             } else {
                 setIndex(prevIndex => prevIndex + 1);
-                setQuestions(data[index + 1]);
+                setQuestions(quizData[index + 1]);
                 options.forEach(option => {
                     option.current.classList.remove('correct', 'incorrect', 'timeout');
                 });
@@ -86,6 +89,28 @@ export default function Quiz() {
             setIsPaused(false); // Resume timer
         }, 2000);
     };
+
+    const nextQuestion = () => {
+        if (lock) {
+            if (index === quizData.length - 1) {
+                setResult(true);
+                return 0;
+            }
+            setIndex(++index);
+            setQuestions(quizData[index]);
+            setLock(false);
+            options.map((option) => {
+                option.current.classList.remove('correct', 'incorrect');
+                return null;
+            });
+        }
+    }
+
+    console.log(quizData);
+    console.log(questions);
+    console.log(index);
+    //console.log(questions.question);
+    //console.log(quizData[0]);
 
     return (
         <>
@@ -125,19 +150,24 @@ export default function Quiz() {
                 </div>
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                    <div className="quiz-card">
+                    <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
+
                         <div className="mt-0">
                             {result ? <>
                                 <div className="text-center">
                                     <h3 className="text-2xl font-bold text-gray-200">Quiz Completed!</h3>
-                                    <p className="mt-2 text-lg text-gray-300">Your Score: {score}/{data.length}</p>
+                                    <p className="mt-2 text-lg text-gray-300">Your Score: {score}/{quizData.length}</p>
                                     <Link to="/dashboard" className="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
                                         Back to Dashboard
                                     </Link>
                                 </div>
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
-                                    {index + 1}. {questions.question}
+                                    {index + 1}.
+                                    {/*{quizData.map((qns) => {*/}
+                                    {/*    return qns.question;*/}
+                                    {/*})}*/}
+                                    {questions.question}
                                 </h2>
 
                                 <div className="relative mt-5"> {/* Divider without text */}
@@ -148,13 +178,30 @@ export default function Quiz() {
                                 </div>
 
                                 <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
-                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>{questions.option1}</li>
-                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>{questions.option2}</li>
-                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>{questions.option3}</li>
-                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>{questions.option4}</li>
+                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
+                                        {questions.option1}
+                                    </li>
+                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
+                                        {questions.option2}
+                                    </li>
+                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
+                                        {questions.option3}
+                                    </li>
+                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
+                                        {questions.option4}
+                                    </li>
                                 </ul>
 
-                                <div className="mt-2 text-center text-gray-400">{index + 1} of {data.length} questions</div>
+                                <div className="mt-6">
+                                    <button
+                                        onClick={nextQuestion}
+                                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105"
+                                    >
+                                        Next Question
+                                    </button>
+                                </div>
+
+                                <div className="mt-2 text-center text-gray-400">{index + 1} of {quizData.length} questions</div>
                             </>}
 
                         </div>
