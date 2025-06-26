@@ -1,6 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
-import Navbar from "../components/Navbar.jsx";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -115,11 +114,6 @@ export default function Quiz() {
     return (
         <>
             <PageTitle title="Quiz - General Knowledge" />
-            <header className="sticky top-0 z-50 flex justify-center items-center">
-                <div className="xl:max-w-full w-full">
-                    <Navbar />
-                </div>
-            </header>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="text-center">

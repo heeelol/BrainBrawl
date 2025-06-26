@@ -14,6 +14,7 @@ import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
 import ProtectedRoute from './components/ProtectedRoute';
 import Multiplayer from "./pages/Multiplayer.jsx"; // Add this import
+import Leaderboard from "./pages/Leaderboard";
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -64,6 +65,17 @@ function App() {
               <Multiplayer />
           </ProtectedRoute>
         } />
+         <Route path="/leaderboard" element={ 
+          <ProtectedRoute>
+            <>
+              <header className="sticky top-0 z-50 flex justify-center items-center">
+                    <div className="xl:max-w-full w-full">
+                        <Navbar />
+                    </div>
+                </header>
+                <Leaderboard />
+            </>
+          </ProtectedRoute>} />
       </Routes>
     </UserContextProvider> 
   )
