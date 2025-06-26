@@ -7,6 +7,7 @@ const app = express();
 const { Server } = require('socket.io');
 const { createServer } = require("node:http");
 const { multiQns } = require('./models/multiQns');
+const User = require('./models/user');
 
 // Define frontend URL for local development
 const FRONTEND_URL = 'http://localhost:5173';
@@ -135,7 +136,14 @@ io.on('connection', (socket) => {
             });
             if (loser) {
                 io.to(room).emit("gameOver", { winner: currentPlayer.name });
-                delete rooms[room];
+                // Award 100 points to the winner in the database
+                User.findOneAndUpdate(
+                    { name: currentPlayer.name },
+                    { $inc: { points: 100 } },
+                    { new: true }
+                ).then(() => {
+                    delete rooms[room];
+                });
                 return;
             }
             clearTimeout(rooms[room].questionTimeout);
@@ -145,7 +153,14 @@ io.on('connection', (socket) => {
             );
             if (winner) {
                 io.to(room).emit("gameOver", { winner: winner.name });
-                delete rooms[room];
+                // Award 100 points to the winner in the database
+                User.findOneAndUpdate(
+                    { name: winner.name },
+                    { $inc: { points: 100 } },
+                    { new: true }
+                ).then(() => {
+                    delete rooms[room];
+                });
             } else {
                 askNewQuestion(room);
             }
