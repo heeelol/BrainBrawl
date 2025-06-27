@@ -135,7 +135,7 @@ export default function Quiz() {
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
                         {/* Centered Timer Above Question */}
-                        <div className="flex justify-center mb-6">
+                        {!result && (<div className="flex justify-center mb-6">
                             <CountdownCircleTimer
                                 key={index}
                                 isPlaying={!isPaused}
@@ -151,6 +151,7 @@ export default function Quiz() {
                                 {renderTime}
                             </CountdownCircleTimer>
                         </div>
+                        )}
                         {/* End Timer */}
 
                         <div className="mt-0">
