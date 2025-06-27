@@ -19,12 +19,8 @@ export function UserContextProvider({children}) {
             });
     }, []);
 
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center text-indigo-400 text-xl">Loading...</div>;
-    }
-
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, loading }}>
             {children}
         </UserContext.Provider>
     )    
