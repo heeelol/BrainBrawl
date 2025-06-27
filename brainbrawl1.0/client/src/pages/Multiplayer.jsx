@@ -74,7 +74,7 @@ export default function Multiplayer() {
 
     useEffect(() => {
         socket.on("message", (message) => {
-            // Instead of toast, update players list
+            // Update players list
             setPlayers((prev) => {
                 if (!prev.includes(message)) {
                     return [...prev, message];
@@ -91,7 +91,7 @@ export default function Multiplayer() {
         });
         socket.on("allReady", () => {
             setAllReady(true);
-            // No redirect, just show the quiz UI in this component
+            
         });
         return () => {
             socket.off("message");
@@ -124,7 +124,7 @@ export default function Multiplayer() {
             if (data.health) {
                 setHealth(data.health);
             } else {
-                // fallback: calculate health locally (should not happen)
+                // Initialize health for players if not provided
                 setHealth(prev => {
                     let newHealth = {...prev};
                     data.scores.forEach(player => {
@@ -208,11 +208,11 @@ export default function Multiplayer() {
                 {!info ? <>
                     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                         <div className="fixed top-4 left-4">
-                            <Link to="/" className="flex items-center text-gray-300 hover:text-white transition-colors">
+                            <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition-colors">
                                 <svg className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                 </svg>
-                                Back to Home
+                                Back to Dashboard
                             </Link>
                         </div>
                         <div className="sm:mx-auto sm:w-full sm:max-w-md">

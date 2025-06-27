@@ -1,6 +1,5 @@
 import React, {useRef, useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
-import Navbar from "../components/Navbar.jsx";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -49,15 +48,26 @@ export default function Quiz() {
     const checkAnswer = (selectedOption, ans) => {
         if (!lock) {
             if (questions.ans === ans) {
-                // Correct answer logic
                 selectedOption.target.classList.add('correct');
                 setScore(prev => prev + 1);
             } else {
-                // Incorrect answer logic
                 selectedOption.target.classList.add('incorrect');
-                options[questions.ans - 1].current.classList.add('correct'); // Highlight the correct answer
+                options[questions.ans - 1].current.classList.add('correct');
             }
             setLock(true);
+            // Automatically proceed to next question after a short delay
+            setTimeout(() => {
+                if (index === quizData.length - 1) {
+                    setResult(true);
+                } else {
+                    setIndex(prevIndex => prevIndex + 1);
+                    setQuestions(quizData[index + 1]);
+                    options.forEach(option => {
+                        option.current.classList.remove('correct', 'incorrect', 'timeout');
+                    });
+                    setLock(false);
+                }
+            }, 1200); // 1.2 seconds delay for feedback
         }
     }
 
@@ -115,11 +125,6 @@ export default function Quiz() {
     return (
         <>
             <PageTitle title="Quiz - General Knowledge" />
-            <header className="sticky top-0 z-50 flex justify-center items-center">
-                <div className="xl:max-w-full w-full">
-                    <Navbar />
-                </div>
-            </header>
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="text-center">
@@ -191,15 +196,6 @@ export default function Quiz() {
                                         {questions.option4}
                                     </li>
                                 </ul>
-
-                                <div className="mt-6">
-                                    <button
-                                        onClick={nextQuestion}
-                                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition hover:scale-105"
-                                    >
-                                        Next Question
-                                    </button>
-                                </div>
 
                                 <div className="mt-2 text-center text-gray-400">{index + 1} of {quizData.length} questions</div>
                             </>}

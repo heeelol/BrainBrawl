@@ -13,7 +13,7 @@ const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
         { name: 'Shop', href: '#', current: false },
-        { name: 'Leaderboard', href: '#', current: false },
+        { name: 'Leaderboard', href: '/leaderboard', current: false },
         { name: 'Social', href: '#', current: false },
     ] : [])
 ];

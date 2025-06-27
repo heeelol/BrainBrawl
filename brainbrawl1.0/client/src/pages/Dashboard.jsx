@@ -1,10 +1,18 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Dashboard() {
     const {user} = useContext(UserContext);
     const navigate = useNavigate();
+    const [leaders, setLeaders] = useState([]);
+
+    useEffect(() => {
+        axios.get('/leaderboard')
+            .then(res => setLeaders(res.data.slice(0, 5))) // Show top 5
+            .catch(() => setLeaders([]));
+    }, []);
 
     const handleNavigation = (path) => {
         navigate(path);
@@ -29,8 +37,37 @@ export default function Dashboard() {
                             <p className="text-gray-300">No active challenges</p>
                         </div>
                         <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg">
-                            <h2 className="text-xl font-semibold text-white mb-4">Leaderboard</h2>
-                            <p className="text-gray-300">Loading rankings...</p>
+                            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">Leaderboard <span className='text-yellow-400 text-2xl'>🏆</span></h2>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-gray-200 text-base">
+                                    <thead>
+                                        <tr>
+                                            <th className="pb-2">Rank</th>
+                                            <th className="pb-2">Player</th>
+                                            <th className="pb-2">Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {leaders.length === 0 && (
+                                            <tr>
+                                                <td colSpan={3} className="text-center py-4 text-gray-400">No data available.</td>
+                                            </tr>
+                                        )}
+                                        {leaders.map((player, idx) => (
+                                            <tr key={player.name} className={idx === 0 ? 'bg-gradient-to-r from-yellow-400/20 to-purple-400/20 font-bold' : ''}>
+                                                <td className="py-2">{player.rank}</td>
+                                                <td className="py-2 flex items-center gap-2">
+                                                    {idx === 0 && <span className="text-yellow-400">🥇</span>}
+                                                    {idx === 1 && <span className="text-gray-300">🥈</span>}
+                                                    {idx === 2 && <span className="text-yellow-600">🥉</span>}
+                                                    <span>{player.name}</span>
+                                                </td>
+                                                <td className="py-2">{player.points}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
