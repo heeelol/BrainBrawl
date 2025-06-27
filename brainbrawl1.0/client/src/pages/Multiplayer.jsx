@@ -5,8 +5,7 @@ import io from 'socket.io-client';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-// Use localhost for local development
-var socket = io('http://localhost:8000', {
+var socket = io('https://brainbrawl-backend-bw7x.onrender.com/', {
   transports: ['websocket'],
   withCredentials: true
 });
