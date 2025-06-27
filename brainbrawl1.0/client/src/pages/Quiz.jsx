@@ -137,25 +137,26 @@ export default function Quiz() {
                     </div>
                 </div>
 
-                <div className="fixed top-20 right-8 z-50">
-                    <CountdownCircleTimer
-                        key={index}
-                        isPlaying={!isPaused}
-                        duration={10}
-                        size={120}
-                        colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-                        colorsTime={[10, 6, 3, 0]}
-                        onComplete={() => {
-                            showCorrectAnswerAndProceed();
-                            return { shouldRepeat: true, delay: 1 };
-                        }}
-                    >
-                        {renderTime}
-                    </CountdownCircleTimer>
-                </div>
-
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
+                        {/* Centered Timer Above Question */}
+                        <div className="flex justify-center mb-6">
+                            <CountdownCircleTimer
+                                key={index}
+                                isPlaying={!isPaused}
+                                duration={10}
+                                size={120}
+                                colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                                colorsTime={[10, 6, 3, 0]}
+                                onComplete={() => {
+                                    showCorrectAnswerAndProceed();
+                                    return { shouldRepeat: true, delay: 1 };
+                                }}
+                            >
+                                {renderTime}
+                            </CountdownCircleTimer>
+                        </div>
+                        {/* End Timer */}
 
                         <div className="mt-0">
                             {result ? <>
@@ -169,9 +170,6 @@ export default function Quiz() {
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
                                     {index + 1}.
-                                    {/*{quizData.map((qns) => {*/}
-                                    {/*    return qns.question;*/}
-                                    {/*})}*/}
                                     {questions.question}
                                 </h2>
 
