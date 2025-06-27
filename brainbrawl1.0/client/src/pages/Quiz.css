@@ -36,7 +36,7 @@
     filter: blur(0.5px);
 }
 
-.correct {
+.QuizList.correct {
     background: linear-gradient(90deg, #bbf7d0 0%, #22d3ee 100%);
     color: #111827;
     border: 2px solid #22d3ee;
@@ -46,7 +46,7 @@
     animation: pop 0.25s cubic-bezier(0.4,0,0.2,1);
 }
 
-.incorrect {
+.QuizList.incorrect {
     background: linear-gradient(90deg, #fca5a5 0%, #f87171 100%);
     color: #111827;
     border: 2px solid #f87171;

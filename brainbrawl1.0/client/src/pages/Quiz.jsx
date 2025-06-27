@@ -18,6 +18,7 @@ export default function Quiz() {
 
     // Add new state for timer control
     const [isPaused, setIsPaused] = useState(false);
+    const [selectedOption, setSelectedOption] = useState(null);
 
     let option1 = useRef(null);
     let option2 = useRef(null);
@@ -45,29 +46,23 @@ export default function Quiz() {
         );
     };
 
-    const checkAnswer = (selectedOption, ans) => {
+    const checkAnswer = (event, ans) => {
         if (!lock) {
+            setSelectedOption(ans);
             if (questions.ans === ans) {
-                selectedOption.target.classList.add('correct');
                 setScore(prev => prev + 1);
-            } else {
-                selectedOption.target.classList.add('incorrect');
-                options[questions.ans - 1].current.classList.add('correct');
             }
             setLock(true);
-            // Automatically proceed to next question after a short delay
             setTimeout(() => {
                 if (index === quizData.length - 1) {
                     setResult(true);
                 } else {
                     setIndex(prevIndex => prevIndex + 1);
                     setQuestions(quizData[index + 1]);
-                    options.forEach(option => {
-                        option.current.classList.remove('correct', 'incorrect', 'timeout');
-                    });
+                    setSelectedOption(null);
                     setLock(false);
                 }
-            }, 1200); // 1.2 seconds delay for feedback
+            }, 1200);
         }
     }
 
@@ -137,25 +132,27 @@ export default function Quiz() {
                     </div>
                 </div>
 
-                <div className="fixed top-20 right-8 z-50">
-                    <CountdownCircleTimer
-                        key={index}
-                        isPlaying={!isPaused}
-                        duration={10}
-                        size={120}
-                        colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-                        colorsTime={[10, 6, 3, 0]}
-                        onComplete={() => {
-                            showCorrectAnswerAndProceed();
-                            return { shouldRepeat: true, delay: 1 };
-                        }}
-                    >
-                        {renderTime}
-                    </CountdownCircleTimer>
-                </div>
-
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-gray-800 bg-opacity-50 py-8 px-4 shadow-xl ring-1 ring-gray-900/10 backdrop-blur-lg sm:rounded-lg sm:px-10">
+                        {/* Centered Timer Above Question */}
+                        {!result && (<div className="flex justify-center mb-6">
+                            <CountdownCircleTimer
+                                key={index}
+                                isPlaying={!isPaused}
+                                duration={10}
+                                size={120}
+                                colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                                colorsTime={[10, 6, 3, 0]}
+                                onComplete={() => {
+                                    showCorrectAnswerAndProceed();
+                                    return { shouldRepeat: true, delay: 1 };
+                                }}
+                            >
+                                {renderTime}
+                            </CountdownCircleTimer>
+                        </div>
+                        )}
+                        {/* End Timer */}
 
                         <div className="mt-0">
                             {result ? <>
@@ -169,9 +166,6 @@ export default function Quiz() {
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
                                     {index + 1}.
-                                    {/*{quizData.map((qns) => {*/}
-                                    {/*    return qns.question;*/}
-                                    {/*})}*/}
                                     {questions.question}
                                 </h2>
 
@@ -183,18 +177,25 @@ export default function Quiz() {
                                 </div>
 
                                 <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
-                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
-                                        {questions.option1}
-                                    </li>
-                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
-                                        {questions.option2}
-                                    </li>
-                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
-                                        {questions.option3}
-                                    </li>
-                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
-                                        {questions.option4}
-                                    </li>
+                                    {[1,2,3,4].map((num, idx) => {
+                                        let optionClass = 'QuizList';
+                                        if (lock && selectedOption === num) {
+                                            optionClass += questions.ans === num ? ' correct' : ' incorrect';
+                                        } else if (lock && questions.ans === num) {
+                                            optionClass += ' correct';
+                                        }
+                                        optionClass += !lock ? ' hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95' : '';
+                                        return (
+                                            <li
+                                                key={num}
+                                                className={optionClass}
+                                                ref={options[idx]}
+                                                onClick={(e) => checkAnswer(e, num)}
+                                            >
+                                                {questions[`option${num}`]}
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
 
                                 <div className="mt-2 text-center text-gray-400">{index + 1} of {quizData.length} questions</div>
