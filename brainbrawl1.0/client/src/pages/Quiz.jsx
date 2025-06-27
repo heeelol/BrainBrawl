@@ -181,16 +181,16 @@ export default function Quiz() {
                                 </div>
 
                                 <ul className="flex flex-col space-y-2 font-medium text-gray-200 mt-5">
-                                    <li className="QuizList" ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
+                                    <li className={`QuizList${!lock ? ' hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95' : ''}`} ref={option1} onClick={(selectedOption) => {checkAnswer(selectedOption, 1)}}>
                                         {questions.option1}
                                     </li>
-                                    <li className="QuizList" ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
+                                    <li className={`QuizList${!lock ? ' hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95' : ''}`} ref={option2} onClick={(selectedOption) => {checkAnswer(selectedOption, 2)}}>
                                         {questions.option2}
                                     </li>
-                                    <li className="QuizList" ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
+                                    <li className={`QuizList${!lock ? ' hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95' : ''}`} ref={option3} onClick={(selectedOption) => {checkAnswer(selectedOption, 3)}}>
                                         {questions.option3}
                                     </li>
-                                    <li className="QuizList" ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
+                                    <li className={`QuizList${!lock ? ' hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95' : ''}`} ref={option4} onClick={(selectedOption) => {checkAnswer(selectedOption, 4)}}>
                                         {questions.option4}
                                     </li>
                                 </ul>
