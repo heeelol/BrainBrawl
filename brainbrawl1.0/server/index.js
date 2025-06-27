@@ -10,7 +10,7 @@ const { multiQns } = require('./models/multiQns');
 const User = require('./models/user');
 
 // Define frontend URL for local development
-const FRONTEND_URL = 'http://localhost:5173';
+const FRONTEND_URL = 'https://brainbrawl-frontend.vercel.app/';
 
 // database connection to MongoDB
 mongoose.connect(process.env.MONGO_URL)
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use('/', require('./routes/authRoutes'));
 
-const port = 8000 || process.env.PORT;
+const port = process.env.PORT || 8000;
 
 // Start the server
 server.listen(port, () => {
