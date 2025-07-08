@@ -127,12 +127,12 @@ export default function Multiplayer() {
                 setHealth(prev => {
                     let newHealth = {...prev};
                     data.scores.forEach(player => {
-                        if (newHealth[player.name] === undefined) newHealth[player.name] = 3;
+                        if (newHealth[player.name] === undefined) newHealth[player.name] = 5;
                     });
                     if (data.isCorrect && data.playerName) {
                         data.scores.forEach(player => {
                             if (player.name !== data.playerName) {
-                                newHealth[player.name] = Math.max(0, (newHealth[player.name] || 3) - 1);
+                                newHealth[player.name] = Math.max(0, (newHealth[player.name] || 5) - 1);
                             }
                         });
                     }
@@ -347,7 +347,7 @@ export default function Multiplayer() {
                         {questions && (
                             <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-8">
                                 {players.map((p, idx) => {
-                                    const hp = health[p] ?? 3;
+                                    const hp = health[p] ?? 5;
                                     let barColor = 'from-green-400 to-green-600';
                                     if (hp === 2) barColor = 'from-yellow-300 to-yellow-500';
                                     if (hp === 1) barColor = 'from-red-400 to-red-600';
@@ -364,12 +364,12 @@ export default function Multiplayer() {
                                             <div className="w-36 h-6 bg-gray-900 rounded-full border-2 border-indigo-700/40 overflow-hidden shadow-inner relative">
                                                 <div
                                                     className={`h-6 bg-gradient-to-r ${barColor} rounded-full transition-all duration-700 ease-in-out flex items-center`}
-                                                    style={{ width: `${(hp / 3) * 100}%` }}
+                                                    style={{ width: `${(hp / 5) * 100}%` }}
                                                 >
                                                     <svg className="w-4 h-4 ml-2 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                                                 </div>
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-xs text-gray-200 font-bold drop-shadow">{hp} / 3 HP</span>
+                                                    <span className="text-xs text-gray-200 font-bold drop-shadow">{hp} / 5 HP</span>
                                                 </div>
                                             </div>
                                         </div>

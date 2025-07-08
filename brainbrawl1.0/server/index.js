@@ -56,7 +56,7 @@ const rooms = {};
 
 function getInitialHealth(players) {
     const health = {};
-    players.forEach(p => { health[p.name] = 3; });
+    players.forEach(p => { health[p.name] = 5; });
     return health;
 }
 
