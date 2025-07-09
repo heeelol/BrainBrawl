@@ -144,6 +144,24 @@ const getQuizQuestions = async (req, res) => {
     }
 };
 
+const getLeaderboard = async (req, res) => {
+    try {
+        const users = await User.find({}, 'name points')
+            .sort({ points: -1 })
+            .lean();
+
+        const leaderboard = users.map((u, i) => ({
+            name: u.name,
+            points: u.points || 0,
+            rank: i + 1
+        }));
+
+        res.json(leaderboard);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch leaderboard' });
+    }
+}
+
 module.exports = {
     test,
     registerUser,
@@ -151,5 +169,6 @@ module.exports = {
     getProfile,
     logoutUser,
     requireAuth,
-    getQuizQuestions
+    getQuizQuestions,
+    getLeaderboard
 }
