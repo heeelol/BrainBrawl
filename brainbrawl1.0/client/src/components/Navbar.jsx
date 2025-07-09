@@ -9,7 +9,6 @@ import logo from '../assets/brainbrawl_icon.png';
 
 // Update navigation to be dynamic based on auth state
 const getNavigation = (isAuthenticated) => [
-    { name: 'Home', href: '/', current: false },
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
         { name: 'Shop', href: '#', current: false },
