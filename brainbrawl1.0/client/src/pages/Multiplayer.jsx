@@ -49,6 +49,21 @@ export default function Multiplayer() {
         }
     };
 
+    const leaveRoom = () => {
+        socket.emit('leaveRoom', roomCode, user?.name);
+        setInfo(false);
+    }
+
+    useEffect(() => {
+        socket.on('roomFull', (msg) => {
+            toast.error(msg);
+            setInfo(false);
+        });
+        return () => {
+            socket.off('roomFull');
+        };
+    }, []);
+
     useEffect(() => {
         // Exit the effect when the timer reaches 0
         if (seconds === 0) return;
@@ -178,6 +193,16 @@ export default function Multiplayer() {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                    <div className="fixed top-4 left-4">
+                            <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition-colors"
+                                  onClick={leaveRoom}
+                            >
+                                <svg className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Quit Multiplayer
+                            </Link>
+                    </div>
                     <div className="text-center">
                         <h2 className="text-3xl font-extrabold text-white">Waiting Room</h2>
                         <p className="mt-2 text-sm text-indigo-300">Players in room:</p>
@@ -187,13 +212,13 @@ export default function Multiplayer() {
                             ))}
                         </ul>
                         <button
-                            className={`mt-6 px-6 py-2 rounded bg-indigo-600 text-white font-bold ${isReady ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`mt-6 px-6 py-2 rounded bg-indigo-600 text-white font-bold hover:bg-indigo-700 hover:scale-105 ${isReady ? 'opacity-50 cursor-not-allowed' : ''}`}
                             onClick={handleReady}
-                            disabled={isReady}
+                            disabled={isReady || players.length !== 2}
                         >
                             {isReady ? 'Ready!' : 'I am Ready'}
                         </button>
-                        <p className="mt-4 text-indigo-300">{`${readyCount}/${totalPlayers} ready`}</p>
+                        <p className="mt-4 text-indigo-300">{`${readyCount}/2 ready`}</p>
                         <p className="mt-2 text-indigo-300">Waiting for all players to be ready...</p>
                     </div>
                 </div>

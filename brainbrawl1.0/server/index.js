@@ -76,6 +76,12 @@ io.on('connection', (socket) => {
                 health: {},
             };
         }
+        // Prevent more than 2 players from joining the same room
+        if (rooms[room].players.length >= 2) {
+            socket.emit('roomFull', 'This room is already full. Please join another room.');
+            return;
+        }
+
         // Add player if not already in room
         if (!rooms[room].players.find(p => p.id === socket.id)) {
             rooms[room].players.push({ id: socket.id, name });
@@ -184,7 +190,27 @@ io.on('connection', (socket) => {
         }
         console.log("A player has disconnected");
     });
+
+    socket.on("leaveRoom", (room, name) => {
+    if (rooms[room]) {
+        rooms[room].players = rooms[room].players.filter(
+            (player) => player.id !== socket.id
+        );
+        delete rooms[room].ready[socket.id];
+        // Broadcast updated player list
+        const playerNames = rooms[room].players.map(p => p.name);
+        io.to(room).emit("playersList", playerNames);
+        // Emit ready count
+        const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;
+        io.to(room).emit("readyCount", readyCount);
+        // Optionally, delete room if empty
+        if (rooms[room].players.length === 0) {
+            delete rooms[room];
+        }
+    }
 });
+});
+
 
 function askNewQuestion(room) {
     if (rooms[room].players.length === 0) {
