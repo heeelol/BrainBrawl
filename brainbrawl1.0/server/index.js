@@ -54,6 +54,42 @@ server.listen(port, () => {
 // Socket.IO setup
 const rooms = {};
 
+// Powerup types and their effects
+const POWERUPS = {
+    heal: {
+        name: 'Heal',
+        description: 'Restore 2 HP (max 5)',
+        apply: (playerName, room) => {
+            rooms[room].health[playerName] = Math.min(5, (rooms[room].health[playerName] || 5) + 2);
+        }
+    },
+    shield: {
+        name: 'Shield',
+        description: 'Block next damage',
+        apply: (playerName, room) => {
+            if (!rooms[room].shields) rooms[room].shields = {};
+            rooms[room].shields[playerName] = true;
+        }
+    },
+    double: {
+        name: 'Double Damage',
+        description: 'Next correct answer deals 2 damage',
+        apply: (playerName, room) => {
+            if (!rooms[room].doubleDamage) rooms[room].doubleDamage = {};
+            rooms[room].doubleDamage[playerName] = true;
+        }
+    }
+};
+
+function getInitialPowerups(players) {
+    // Each player gets 1 of each powerup at the start
+    const powerups = {};
+    players.forEach(p => {
+        powerups[p.name] = ['heal', 'shield', 'double'];
+    });
+    return powerups;
+}
+
 function getInitialHealth(players) {
     const health = {};
     players.forEach(p => { health[p.name] = 5; });
@@ -74,6 +110,9 @@ io.on('connection', (socket) => {
                 questionTimeout: null,
                 shouldAskNewQuestion: true,
                 health: {},
+                powerups: {}, 
+                shields: {}, 
+                doubleDamage: {}, 
             };
         }
         // Prevent more than 2 players from joining the same room
@@ -86,6 +125,8 @@ io.on('connection', (socket) => {
         if (!rooms[room].players.find(p => p.id === socket.id)) {
             rooms[room].players.push({ id: socket.id, name });
         }
+        // Always reset powerups for all players in the room
+        rooms[room].powerups = getInitialPowerups(rooms[room].players);
         // Reset ready state for this player
         rooms[room].ready[socket.id] = false;
         // Reset health for all players
@@ -93,6 +134,8 @@ io.on('connection', (socket) => {
         // Broadcast player names to all in room
         const playerNames = rooms[room].players.map(p => p.name);
         io.to(room).emit("playersList", playerNames);
+        // Send powerup state to all
+        io.to(room).emit("powerupState", rooms[room].powerups);
     });
 
     socket.on("playerReady", (room, name) => {
@@ -120,11 +163,21 @@ io.on('connection', (socket) => {
         if (currentPlayer) {
             const correctAnswer = rooms[room].correctAnswer;
             const isCorrect = correctAnswer !== null && correctAnswer === answerIndex;
-            // Health logic: if correct, damage all others by 1
+            // Health logic: if correct, damage all others by 1 (or 2 if doubleDamage)
+            let damage = 1;
+            if (isCorrect && rooms[room].doubleDamage && rooms[room].doubleDamage[currentPlayer.name]) {
+                damage = 2;
+                rooms[room].doubleDamage[currentPlayer.name] = false; // consume double damage
+            }
             if (isCorrect) {
                 rooms[room].players.forEach(player => {
                     if (player.id !== socket.id) {
-                        rooms[room].health[player.name] = Math.max(0, (rooms[room].health[player.name] || 3) - 1);
+                        // If shielded, block damage and consume shield
+                        if (rooms[room].shields && rooms[room].shields[player.name]) {
+                            rooms[room].shields[player.name] = false;
+                        } else {
+                            rooms[room].health[player.name] = Math.max(0, (rooms[room].health[player.name] || 5) - damage);
+                        }
                     }
                 });
             }
@@ -139,6 +192,8 @@ io.on('connection', (socket) => {
                     score: player.score || 0,
                 })),
                 health: { ...rooms[room].health },
+                shields: { ...rooms[room].shields },
+                doubleDamage: { ...rooms[room].doubleDamage },
             });
             if (loser) {
                 io.to(room).emit("gameOver", { winner: currentPlayer.name });
@@ -173,12 +228,41 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Powerup usage event
+    socket.on("usePowerup", (room, powerupType) => {
+        if (!rooms[room] || !POWERUPS[powerupType]) return;
+        const player = rooms[room].players.find(p => p.id === socket.id);
+        if (!player) return;
+        const playerName = player.name;
+        // Check if player has this powerup
+        const idx = rooms[room].powerups[playerName]?.indexOf(powerupType);
+        if (idx === -1 || idx === undefined) return;
+        // Remove powerup from inventory
+        rooms[room].powerups[playerName].splice(idx, 1);
+        // Apply effect
+        POWERUPS[powerupType].apply(playerName, room);
+        // Broadcast updated powerup state and effect
+        io.to(room).emit("powerupUsed", {
+            playerName,
+            powerupType,
+            powerups: rooms[room].powerups,
+            health: { ...rooms[room].health },
+            shields: { ...rooms[room].shields },
+            doubleDamage: { ...rooms[room].doubleDamage },
+        });
+    });
+
     socket.on("disconnect", () => {
         for (const room in rooms) {
             rooms[room].players = rooms[room].players.filter(
                 (player) => player.id !== socket.id
             );
             delete rooms[room].ready[socket.id];
+            // Remove powerups, shields, doubleDamage for this player
+            if (rooms[room].players.length === 0) {
+                delete rooms[room];
+                continue;
+            }
             // Broadcast updated player list
             const playerNames = rooms[room].players.map(p => p.name);
             io.to(room).emit("playersList", playerNames);
@@ -187,28 +271,36 @@ io.on('connection', (socket) => {
                 const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;
                 io.to(room).emit("readyCount", readyCount);
             }
+            // Broadcast updated powerup state
+            io.to(room).emit("powerupState", rooms[room].powerups);
         }
         console.log("A player has disconnected");
     });
 
     socket.on("leaveRoom", (room, name) => {
-    if (rooms[room]) {
-        rooms[room].players = rooms[room].players.filter(
-            (player) => player.id !== socket.id
-        );
-        delete rooms[room].ready[socket.id];
-        // Broadcast updated player list
-        const playerNames = rooms[room].players.map(p => p.name);
-        io.to(room).emit("playersList", playerNames);
-        // Emit ready count
-        const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;
-        io.to(room).emit("readyCount", readyCount);
-        // Optionally, delete room if empty
-        if (rooms[room].players.length === 0) {
-            delete rooms[room];
+        if (rooms[room]) {
+            rooms[room].players = rooms[room].players.filter(
+                (player) => player.id !== socket.id
+            );
+            delete rooms[room].ready[socket.id];
+            // Remove powerups, shields, doubleDamage for this player
+            delete rooms[room].powerups?.[name];
+            delete rooms[room].shields?.[name];
+            delete rooms[room].doubleDamage?.[name];
+            // Broadcast updated player list
+            const playerNames = rooms[room].players.map(p => p.name);
+            io.to(room).emit("playersList", playerNames);
+            // Emit ready count
+            const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;
+            io.to(room).emit("readyCount", readyCount);
+            // Broadcast updated powerup state
+            io.to(room).emit("powerupState", rooms[room].powerups);
+            // Optionally, delete room if empty
+            if (rooms[room].players.length === 0) {
+                delete rooms[room];
+            }
         }
-    }
-});
+    });
 });
 
 

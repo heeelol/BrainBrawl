@@ -29,6 +29,21 @@ export default function Multiplayer() {
     const [totalPlayers, setTotalPlayers] = useState(0);
     const [health, setHealth] = useState({});
     const [myName, setMyName] = useState("");
+    const [powerups, setPowerups] = useState({});
+    const [powerupMsg, setPowerupMsg] = useState("");
+    const [powerupCooldown, setPowerupCooldown] = useState(false);
+    
+    // Powerup button handler
+    const handleUsePowerup = (type) => {
+        if (powerupCooldown) return;
+        if (!powerups[myName] || !powerups[myName].includes(type)) {
+            toast.error("You don't have this powerup!");
+            return;
+        }
+        socket.emit("usePowerup", roomCode, type);
+        setPowerupCooldown(true);
+        setTimeout(() => setPowerupCooldown(false), 2000); // 2s cooldown
+    };
 
     const navigate = useNavigate();
 
@@ -99,7 +114,7 @@ export default function Multiplayer() {
         socket.on("playersList", (list) => {
             setPlayers(list);
             setTotalPlayers(list.length);
-        });
+        }); 
         socket.on("readyCount", (count) => {
             setReadyCount(count);
         });
@@ -154,6 +169,18 @@ export default function Multiplayer() {
                     return newHealth;
                 });
             }
+            // Update powerups if sent
+            if (data.powerups) setPowerups(data.powerups);
+        });
+
+        socket.on('powerupState', (state) => {
+            setPowerups(state);
+        });
+        socket.on('powerupUsed', (data) => {
+            setPowerups(data.powerups);
+            setHealth(data.health);
+            setPowerupMsg(`${data.playerName} used ${data.powerupType.toUpperCase()}!`);
+            setTimeout(() => setPowerupMsg(""), 2000);
         });
 
         socket.on('gameOver', (data)=>{
@@ -164,6 +191,8 @@ export default function Multiplayer() {
             socket.off('newQuestion');
             socket.off('answerResult');
             socket.off('gameOver');
+            socket.off('powerupState');
+            socket.off('powerupUsed');
         };
     }, []);
 
@@ -283,7 +312,6 @@ export default function Multiplayer() {
                     </div>
                 </> : <>
                     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-                        {/* Animated background effect */}
                         <div className="absolute inset-0 z-0 pointer-events-none">
                             <div className="w-full h-full bg-gradient-to-tr from-indigo-800/30 via-purple-700/20 to-indigo-900/40 animate-gradient-move"></div>
                             <div className="absolute top-1/4 left-1/2 w-96 h-96 bg-indigo-500 opacity-20 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -370,7 +398,36 @@ export default function Multiplayer() {
                         </div>
 
                         {questions && (
-                            <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-8">
+                            <>
+                            {/* Powerup UI */}
+                            <div className="flex flex-col items-center mb-4">
+                                <div className="flex gap-4 mb-2">
+                                    <button
+                                        className={`px-4 py-2 rounded bg-green-600 text-white font-bold shadow hover:bg-green-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('heal')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('heal')}
+                                    >
+                                        Heal (+2 hp) {powerups[myName]?.filter(p => p === 'heal').length > 0 ? `(${powerups[myName].filter(p => p === 'heal').length})` : ''}
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 rounded bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('shield')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('shield')}
+                                    >
+                                        Shield {powerups[myName]?.filter(p => p === 'shield').length > 0 ? `(${powerups[myName].filter(p => p === 'shield').length})` : ''}
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 rounded bg-yellow-500 text-white font-bold shadow hover:bg-yellow-600 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('double')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('double')}
+                                    >
+                                        Double Damage {powerups[myName]?.filter(p => p === 'double').length > 0 ? `(${powerups[myName].filter(p => p === 'double').length})` : ''}
+                                    </button>
+                                </div>
+                                {powerupMsg && <div className="text-indigo-300 font-bold animate-pulse mt-2">{powerupMsg}</div>}
+                            </div>
+                            {/* Health bars */}
+                            <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-4">
                                 {players.map((p, idx) => {
                                     const hp = health[p] ?? 5;
                                     let barColor = 'from-green-400 to-green-600';
@@ -401,6 +458,7 @@ export default function Multiplayer() {
                                     );
                                 })}
                             </div>
+                            </>
                         )}
                     </div>
                 </>}
