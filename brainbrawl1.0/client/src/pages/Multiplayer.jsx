@@ -11,6 +11,7 @@ var socket = io('http://localhost:8000', {
 });
 
 export default function Multiplayer() {
+    const [answerDelay, setAnswerDelay] = useState(false);
     const {user} = useContext(UserContext);
     const [roomCode, setRoomCode] = useState();
     const [info, setInfo] = useState(false);
@@ -56,11 +57,12 @@ export default function Multiplayer() {
     };
 
     const handleAnswer = (answerIndex) => {
-        if (!answered) {
+        if (!answered && !answerDelay) {
             setSelectedAnswerIndex(answerIndex);
-
-            socket.emit('submitAnswer', roomCode, answerIndex);
             setAnswered(true);
+            setAnswerDelay(true);
+            socket.emit('submitAnswer', roomCode, answerIndex);
+            setTimeout(() => setAnswerDelay(false), 1200); // 1.2s delay
         }
     };
 
@@ -147,6 +149,8 @@ export default function Multiplayer() {
         socket.on('answerResult', (data) => {
             if (data.isCorrect) {
                 toast.success(`${data.playerName} answered correctly!`);
+            } else if (data.playerName && data.playerName !== 'None') {
+                toast.error(`${data.playerName} answered incorrectly!`);
             }
             setScoreList(data.scores);
             // Use health from server if provided
@@ -366,10 +370,10 @@ export default function Multiplayer() {
                                                         key={index}
                                                         className={`quizList options relative group transition-all duration-200 border border-indigo-700/30 rounded-lg px-5 py-3 cursor-pointer bg-gray-700/60 hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/60 ${optionState}`}
                                                         onClick={() => handleAnswer(index)}
-                                                        disabled={answered}
+                                                        disabled={answered || answerDelay}
                                                         style={{
-                                                            opacity: answered && selectedAnswerIndex !== index ? 0.6 : 1,
-                                                            pointerEvents: answered ? 'none' : 'auto',
+                                                            opacity: (answered && selectedAnswerIndex !== index) || answerDelay ? 0.6 : 1,
+                                                            pointerEvents: answered || answerDelay ? 'none' : 'auto',
                                                             filter: answered && selectedAnswerIndex === index ? 'brightness(1.1)' : 'none',
                                                         }}
                                                     >
