@@ -94,7 +94,7 @@ const getProfile = (req, res) => {
         jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
             if (err) throw err;
             res.set({
-                'Access-Control-Allow-Origin': 'http://localhost:5173',
+                'Access-Control-Allow-Origin': 'https://brainbrawl-frontend.vercel.app',
                 'Access-Control-Allow-Credentials': 'true'
             }).json(user);
         });
