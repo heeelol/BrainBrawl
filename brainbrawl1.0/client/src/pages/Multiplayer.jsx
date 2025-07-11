@@ -5,12 +5,13 @@ import io from 'socket.io-client';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-var socket = io('https://brainbrawl-backend-bw7x.onrender.com/', {
+var socket = io('https://brainbrawl-backend-bw7x.onrender.com', {
   transports: ['websocket'],
   withCredentials: true
 });
 
 export default function Multiplayer() {
+    const [answerDelay, setAnswerDelay] = useState(false);
     const {user} = useContext(UserContext);
     const [roomCode, setRoomCode] = useState();
     const [info, setInfo] = useState(false);
@@ -29,6 +30,21 @@ export default function Multiplayer() {
     const [totalPlayers, setTotalPlayers] = useState(0);
     const [health, setHealth] = useState({});
     const [myName, setMyName] = useState("");
+    const [powerups, setPowerups] = useState({});
+    const [powerupMsg, setPowerupMsg] = useState("");
+    const [powerupCooldown, setPowerupCooldown] = useState(false);
+    
+    // Powerup button handler
+    const handleUsePowerup = (type) => {
+        if (powerupCooldown) return;
+        if (!powerups[myName] || !powerups[myName].includes(type)) {
+            toast.error("You don't have this powerup!");
+            return;
+        }
+        socket.emit("usePowerup", roomCode, type);
+        setPowerupCooldown(true);
+        setTimeout(() => setPowerupCooldown(false), 2000); // 2s cooldown
+    };
 
     const navigate = useNavigate();
 
@@ -41,13 +57,29 @@ export default function Multiplayer() {
     };
 
     const handleAnswer = (answerIndex) => {
-        if (!answered) {
+        if (!answered && !answerDelay) {
             setSelectedAnswerIndex(answerIndex);
-
-            socket.emit('submitAnswer', roomCode, answerIndex);
             setAnswered(true);
+            setAnswerDelay(true);
+            socket.emit('submitAnswer', roomCode, answerIndex);
+            setTimeout(() => setAnswerDelay(false), 1200); // 1.2s delay
         }
     };
+
+    const leaveRoom = () => {
+        socket.emit('leaveRoom', roomCode, user?.name);
+        setInfo(false);
+    }
+
+    useEffect(() => {
+        socket.on('roomFull', (msg) => {
+            toast.error(msg);
+            setInfo(false);
+        });
+        return () => {
+            socket.off('roomFull');
+        };
+    }, []);
 
     useEffect(() => {
         // Exit the effect when the timer reaches 0
@@ -84,7 +116,7 @@ export default function Multiplayer() {
         socket.on("playersList", (list) => {
             setPlayers(list);
             setTotalPlayers(list.length);
-        });
+        }); 
         socket.on("readyCount", (count) => {
             setReadyCount(count);
         });
@@ -117,6 +149,8 @@ export default function Multiplayer() {
         socket.on('answerResult', (data) => {
             if (data.isCorrect) {
                 toast.success(`${data.playerName} answered correctly!`);
+            } else if (data.playerName && data.playerName !== 'None') {
+                toast.error(`${data.playerName} answered incorrectly!`);
             }
             setScoreList(data.scores);
             // Use health from server if provided
@@ -127,18 +161,30 @@ export default function Multiplayer() {
                 setHealth(prev => {
                     let newHealth = {...prev};
                     data.scores.forEach(player => {
-                        if (newHealth[player.name] === undefined) newHealth[player.name] = 3;
+                        if (newHealth[player.name] === undefined) newHealth[player.name] = 5;
                     });
                     if (data.isCorrect && data.playerName) {
                         data.scores.forEach(player => {
                             if (player.name !== data.playerName) {
-                                newHealth[player.name] = Math.max(0, (newHealth[player.name] || 3) - 1);
+                                newHealth[player.name] = Math.max(0, (newHealth[player.name] || 5) - 1);
                             }
                         });
                     }
                     return newHealth;
                 });
             }
+            // Update powerups if sent
+            if (data.powerups) setPowerups(data.powerups);
+        });
+
+        socket.on('powerupState', (state) => {
+            setPowerups(state);
+        });
+        socket.on('powerupUsed', (data) => {
+            setPowerups(data.powerups);
+            setHealth(data.health);
+            setPowerupMsg(`${data.playerName} used ${data.powerupType.toUpperCase()}!`);
+            setTimeout(() => setPowerupMsg(""), 2000);
         });
 
         socket.on('gameOver', (data)=>{
@@ -149,6 +195,8 @@ export default function Multiplayer() {
             socket.off('newQuestion');
             socket.off('answerResult');
             socket.off('gameOver');
+            socket.off('powerupState');
+            socket.off('powerupUsed');
         };
     }, []);
 
@@ -178,6 +226,16 @@ export default function Multiplayer() {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                    <div className="fixed top-4 left-4">
+                            <Link to="/dashboard" className="flex items-center text-gray-300 hover:text-white transition-colors"
+                                  onClick={leaveRoom}
+                            >
+                                <svg className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Quit Multiplayer
+                            </Link>
+                    </div>
                     <div className="text-center">
                         <h2 className="text-3xl font-extrabold text-white">Waiting Room</h2>
                         <p className="mt-2 text-sm text-indigo-300">Players in room:</p>
@@ -187,13 +245,13 @@ export default function Multiplayer() {
                             ))}
                         </ul>
                         <button
-                            className={`mt-6 px-6 py-2 rounded bg-indigo-600 text-white font-bold ${isReady ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`mt-6 px-6 py-2 rounded bg-indigo-600 text-white font-bold hover:bg-indigo-700 hover:scale-105 ${isReady ? 'opacity-50 cursor-not-allowed' : ''}`}
                             onClick={handleReady}
-                            disabled={isReady}
+                            disabled={isReady || players.length !== 2}
                         >
                             {isReady ? 'Ready!' : 'I am Ready'}
                         </button>
-                        <p className="mt-4 text-indigo-300">{`${readyCount}/${totalPlayers} ready`}</p>
+                        <p className="mt-4 text-indigo-300">{`${readyCount}/2 ready`}</p>
                         <p className="mt-2 text-indigo-300">Waiting for all players to be ready...</p>
                     </div>
                 </div>
@@ -258,7 +316,6 @@ export default function Multiplayer() {
                     </div>
                 </> : <>
                     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-                        {/* Animated background effect */}
                         <div className="absolute inset-0 z-0 pointer-events-none">
                             <div className="w-full h-full bg-gradient-to-tr from-indigo-800/30 via-purple-700/20 to-indigo-900/40 animate-gradient-move"></div>
                             <div className="absolute top-1/4 left-1/2 w-96 h-96 bg-indigo-500 opacity-20 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -313,10 +370,10 @@ export default function Multiplayer() {
                                                         key={index}
                                                         className={`quizList options relative group transition-all duration-200 border border-indigo-700/30 rounded-lg px-5 py-3 cursor-pointer bg-gray-700/60 hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/60 ${optionState}`}
                                                         onClick={() => handleAnswer(index)}
-                                                        disabled={answered}
+                                                        disabled={answered || answerDelay}
                                                         style={{
-                                                            opacity: answered && selectedAnswerIndex !== index ? 0.6 : 1,
-                                                            pointerEvents: answered ? 'none' : 'auto',
+                                                            opacity: (answered && selectedAnswerIndex !== index) || answerDelay ? 0.6 : 1,
+                                                            pointerEvents: answered || answerDelay ? 'none' : 'auto',
                                                             filter: answered && selectedAnswerIndex === index ? 'brightness(1.1)' : 'none',
                                                         }}
                                                     >
@@ -345,9 +402,38 @@ export default function Multiplayer() {
                         </div>
 
                         {questions && (
-                            <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-8">
+                            <>
+                            {/* Powerup UI */}
+                            <div className="flex flex-col items-center mb-4">
+                                <div className="flex gap-4 mb-2">
+                                    <button
+                                        className={`px-4 py-2 rounded bg-green-600 text-white font-bold shadow hover:bg-green-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('heal')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('heal')}
+                                    >
+                                        Heal (+2 hp) {powerups[myName]?.filter(p => p === 'heal').length > 0 ? `(${powerups[myName].filter(p => p === 'heal').length})` : ''}
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 rounded bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('shield')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('shield')}
+                                    >
+                                        Shield {powerups[myName]?.filter(p => p === 'shield').length > 0 ? `(${powerups[myName].filter(p => p === 'shield').length})` : ''}
+                                    </button>
+                                    <button
+                                        className={`px-4 py-2 rounded bg-yellow-500 text-white font-bold shadow hover:bg-yellow-600 transition disabled:opacity-40 disabled:cursor-not-allowed`}
+                                        onClick={() => handleUsePowerup('double')}
+                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('double')}
+                                    >
+                                        Double Damage {powerups[myName]?.filter(p => p === 'double').length > 0 ? `(${powerups[myName].filter(p => p === 'double').length})` : ''}
+                                    </button>
+                                </div>
+                                {powerupMsg && <div className="text-indigo-300 font-bold animate-pulse mt-2">{powerupMsg}</div>}
+                            </div>
+                            {/* Health bars */}
+                            <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-4">
                                 {players.map((p, idx) => {
-                                    const hp = health[p] ?? 3;
+                                    const hp = health[p] ?? 5;
                                     let barColor = 'from-green-400 to-green-600';
                                     if (hp === 2) barColor = 'from-yellow-300 to-yellow-500';
                                     if (hp === 1) barColor = 'from-red-400 to-red-600';
@@ -364,18 +450,19 @@ export default function Multiplayer() {
                                             <div className="w-36 h-6 bg-gray-900 rounded-full border-2 border-indigo-700/40 overflow-hidden shadow-inner relative">
                                                 <div
                                                     className={`h-6 bg-gradient-to-r ${barColor} rounded-full transition-all duration-700 ease-in-out flex items-center`}
-                                                    style={{ width: `${(hp / 3) * 100}%` }}
+                                                    style={{ width: `${(hp / 5) * 100}%` }}
                                                 >
                                                     <svg className="w-4 h-4 ml-2 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                                                 </div>
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-xs text-gray-200 font-bold drop-shadow">{hp} / 3 HP</span>
+                                                    <span className="text-xs text-gray-200 font-bold drop-shadow">{hp} / 5 HP</span>
                                                 </div>
                                             </div>
                                         </div>
                                     );
                                 })}
                             </div>
+                            </>
                         )}
                     </div>
                 </>}

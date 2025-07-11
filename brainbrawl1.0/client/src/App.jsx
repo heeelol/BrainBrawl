@@ -16,13 +16,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Multiplayer from "./pages/Multiplayer.jsx"; // Add this import
 import Leaderboard from "./pages/Leaderboard";
 
-axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com/';
+axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 function App() {
-  return (
-    <UserContextProvider>
+  return (    <UserContextProvider>
       <Toaster position='bottom-right' toastOptions={{duration: 2000}} />
       <Routes>
         <Route path="*" element={<NotFound />} />
