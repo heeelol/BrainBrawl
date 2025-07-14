@@ -200,7 +200,7 @@ io.on('connection', (socket) => {
                 // Award 100 points to the winner in the database
                 User.findOneAndUpdate(
                     { name: currentPlayer.name },
-                    { $inc: { points: 100 } },
+                    { $inc: { points: 100, xp: 50 } },
                     { new: true }
                 ).then(() => {
                     delete rooms[room];
@@ -208,23 +208,7 @@ io.on('connection', (socket) => {
                 return;
             }
             clearTimeout(rooms[room].questionTimeout);
-            const winningThreshold = 5;
-            const winner = rooms[room].players.find(
-                (player) => (player.score || 0) >= winningThreshold
-            );
-            if (winner) {
-                io.to(room).emit("gameOver", { winner: winner.name });
-                // Award 100 points to the winner in the database
-                User.findOneAndUpdate(
-                    { name: winner.name },
-                    { $inc: { points: 100 } },
-                    { new: true }
-                ).then(() => {
-                    delete rooms[room];
-                });
-            } else {
-                askNewQuestion(room);
-            }
+            askNewQuestion(room);
         }
     });
 

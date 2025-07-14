@@ -12,6 +12,10 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
     },
+    xp: {
+        type: Number,
+        default: 0,
+    },
 });
 
 const UserModel = mongoose.model('User', userSchema);

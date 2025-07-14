@@ -2,6 +2,7 @@ const User = require('../models/user');
 const General = require("../models/quiz");
 const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
+const { xpForLevel, getLevelFromXP, getXPProgress } = require('../helpers/xp');
 
 const test = (req, res) => {
     res.json('test is working');
@@ -144,6 +145,7 @@ const getQuizQuestions = async (req, res) => {
     }
 };
 
+
 const getLeaderboard = async (req, res) => {
     try {
         const users = await User.find({}, 'name points')
@@ -162,6 +164,18 @@ const getLeaderboard = async (req, res) => {
     }
 }
 
+// Get user level, current XP, and needed XP for next level
+const getLevel = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).lean();
+        const xp = user.xp || 0;
+        const progress = getXPProgress(xp);
+        res.json(progress);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch level' });
+    }
+}
+
 module.exports = {
     test,
     registerUser,
@@ -170,5 +184,6 @@ module.exports = {
     logoutUser,
     requireAuth,
     getQuizQuestions,
-    getLeaderboard
+    getLeaderboard,
+    getLevel
 }
