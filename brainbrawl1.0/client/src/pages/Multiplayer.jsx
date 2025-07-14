@@ -189,6 +189,10 @@ export default function Multiplayer() {
 
         socket.on('gameOver', (data)=>{
             setWinner(data.winner);
+
+            if (user.name === data.winner) {
+                toast.success("You won! + 100 points, +50 XP 🎊");
+            }
         })
 
         return () => {
