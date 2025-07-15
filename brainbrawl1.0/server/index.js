@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const { Server } = require('socket.io');
 const { createServer } = require("node:http");
-const { multiQns } = require('./models/multiQns');
+const multiQns = require('./models/multiQuiz');
 const User = require('./models/user');
 
 // Define frontend URL for local development
@@ -288,15 +288,19 @@ io.on('connection', (socket) => {
 });
 
 
-function askNewQuestion(room) {
+async function askNewQuestion(room) {
     if (rooms[room].players.length === 0) {
         clearTimeout(rooms[room].questionTimeout);
         delete rooms[room];
         return;
     }
 
-    const randIndex = Math.floor(Math.random() * multiQns.length);
-    const question = multiQns[randIndex];
+    const count = await multiQns.countDocuments();
+    const rand = Math.floor(Math.random() * count);
+    const question = await multiQns.findOne().skip(rand);
+
+    if (!question) return;
+
     rooms[room].currentQuestion = question;
     rooms[room].correctAnswer = question.answers.findIndex(
         (answer) => answer.correct
@@ -318,7 +322,7 @@ function askNewQuestion(room) {
                 name: player.name,
                 score: player.score || 0,
             })),
-            health: { ...rooms[room].health },
+            health: {...rooms[room].health},
         });
         askNewQuestion(room);
     }, 10000);

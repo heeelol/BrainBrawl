@@ -213,7 +213,10 @@ export default function Multiplayer() {
         }
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
-                <h1 className="text-4xl font-bold text-white mb-6">Victory!</h1>
+                { user.name === winner ?
+                    <h1 className="text-4xl font-bold text-white mb-6">Victory!</h1> :
+                    <h1 className="text-4xl font-bold text-white mb-6">Defeat!</h1>
+                }
                 <p className="text-2xl text-indigo-300 mb-8">Winner: {winnerName}</p>
                 <button
                     className="px-6 py-2 rounded bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition mb-2"

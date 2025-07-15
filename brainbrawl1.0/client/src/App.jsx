@@ -66,12 +66,14 @@ function App() {
         } />
         <Route path="/multiplayer" element={
           <ProtectedRoute>
+              <PageTitle title="Quiz - Multiplayer" />
               <Multiplayer />
           </ProtectedRoute>
         } />
          <Route path="/leaderboard" element={ 
           <ProtectedRoute>
             <>
+              <PageTitle title="Leaderboard" />
               <header className="sticky top-0 z-50 flex justify-center items-center">
                     <div className="xl:max-w-full w-full">
                         <Navbar />

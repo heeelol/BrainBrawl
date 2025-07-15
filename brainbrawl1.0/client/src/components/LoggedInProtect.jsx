@@ -5,9 +5,9 @@ import {toast} from "react-hot-toast";
 
 const LoggedInProtect = ({ children }) => {
     const { user, loading } = useContext(UserContext);
-    const toastShown = useRef(false);
-    const prevUser = useRef(user);
-    const location = useLocation();
+    // const toastShown = useRef(false);
+    // const prevUser = useRef(user);
+    // const location = useLocation();
 
     // useEffect(() => {
     //     // Only show toast if user is not logged in, not loading, and wasn't just logged out
