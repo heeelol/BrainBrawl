@@ -5,9 +5,9 @@ import io from 'socket.io-client';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-var socket = io('http://localhost:8000', {
-  transports: ['websocket'],
-  withCredentials: true
+const socket = io('http://localhost:8000', {
+    transports: ['websocket'],
+    withCredentials: true
 });
 
 export default function Multiplayer() {
