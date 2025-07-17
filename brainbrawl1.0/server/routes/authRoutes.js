@@ -24,7 +24,7 @@ router.post('/logout', logoutUser);
 router.get('/dashboard', requireAuth, (req, res) => {
     res.json({ user: req.user });
 });
-router.get('/quiz', getQuizQuestions);
+router.get('/quiz/:topic', getQuizQuestions);
 router.get('/leaderboard', getLeaderboard);
 router.get('/level', requireAuth, getLevel);
 

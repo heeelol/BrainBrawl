@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const General = require("../models/quiz");
+const {getQuizModel} = require("../models/quiz");
 const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
 const { xpForLevel, getLevelFromXP, getXPProgress } = require('../helpers/xp');
@@ -136,9 +136,20 @@ const requireAuth = (req, res, next) => {
     }
 }
 
+// const getQuizQuestions = async (req, res) => {
+//     try {
+//         const questions = await General.find({});
+//         res.json(questions);
+//     } catch (err) {
+//         res.status(500).json({ error: 'Failed to fetch quiz data' });
+//     }
+// };
+
 const getQuizQuestions = async (req, res) => {
+    const topic = req.params.topic;
     try {
-        const questions = await General.find({});
+        const quizModel = getQuizModel(topic);
+        const questions = await quizModel.find({});
         res.json(questions);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch quiz data' });

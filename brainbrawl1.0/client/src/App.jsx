@@ -1,5 +1,5 @@
 import './App.css'
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, useParams} from 'react-router-dom';
 import Navbar from '../src/components/Navbar.jsx';
 import Navbar_2 from "./components/Navbar_2.jsx";
 import Home from './pages/Home.jsx';
@@ -20,6 +20,11 @@ import LoggedInProtect from "./components/LoggedInProtect.jsx";
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+function QuizWithTopic() {
+    const { topic } = useParams();
+    return <Quiz topic={topic} />;
+}
 
 function App() {
   return (    <UserContextProvider>
@@ -59,9 +64,9 @@ function App() {
             </>
           </ProtectedRoute>
         } />
-        <Route path="/quiz" element={
+        <Route path="/quiz/:topic" element={
           <ProtectedRoute>
-              <Quiz />
+            <QuizWithTopic />
           </ProtectedRoute>
         } />
         <Route path="/multiplayer" element={

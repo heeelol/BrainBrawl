@@ -1,5 +1,5 @@
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/react'
-import {ArrowRightEndOnRectangleIcon, Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
+import {ArrowRightEndOnRectangleIcon, Bars3Icon, ComputerDesktopIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import logo from '../assets/brainbrawl_text_dark.png';
 import {Link, useNavigate} from "react-router-dom";
 import {useContext} from "react";
@@ -74,7 +74,7 @@ export default function Navbar_2() {
                                         aria-current={item.current ? 'page' : undefined}
                                         onClick={(e) => handleNavigation(e, item.href)}
                                         className={classNames(
-                                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-indigo-700 hover:text-white',
                                             'rounded-md px-3 py-2 text-sm font-medium',
                                         )}
                                     >
@@ -86,14 +86,16 @@ export default function Navbar_2() {
                     </div>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                         { user?.name ? <>
-                            <button
-                                type="button"
-                                className="relative rounded-full bg-indigo-950 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden"
-                            >
-                                <span className="absolute -inset-1.5" />
-                                <span className="sr-only">View notifications</span>
-                                <BellIcon aria-hidden="true" className="size-6" />
-                            </button>
+                            {/*<Link to="/dashboard">*/}
+                            {/*    <button*/}
+                            {/*        type="button"*/}
+                            {/*        className="relative rounded-full bg-indigo-950 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden"*/}
+                            {/*    >*/}
+                            {/*        <span className="absolute -inset-1.5" />*/}
+                            {/*        <span className="sr-only">Go to Dashboard</span>*/}
+                            {/*        <ComputerDesktopIcon aria-hidden="true" className="size-6" />*/}
+                            {/*    </button>*/}
+                            {/*</Link>*/}
 
                             {/* Profile dropdown */}
                             <Menu as="div" className="relative ml-3">
@@ -113,6 +115,14 @@ export default function Navbar_2() {
                                     transition
                                     className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                                 >
+                                    <MenuItem>
+                                        <Link
+                                            to="/dashboard"
+                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Open Dashboard
+                                        </Link>
+                                    </MenuItem>
                                     <MenuItem>
                                         <Link
                                             to="/profile"
