@@ -11,7 +11,7 @@ import logo from '../assets/brainbrawl_icon.png';
 const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
-        { name: 'Shop', href: '#', current: false },
+        { name: 'Shop', href: '/shop', current: false },
         { name: 'Leaderboard', href: '/leaderboard', current: false },
         { name: 'Social', href: '#', current: false },
     ] : [])

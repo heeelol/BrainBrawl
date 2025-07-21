@@ -200,7 +200,7 @@ io.on('connection', (socket) => {
                 // Award 100 points to the winner in the database
                 User.findOneAndUpdate(
                     { name: currentPlayer.name },
-                    { $inc: { points: 100, xp: 50 } },
+                    { $inc: { points: 100, xp: 50, coins: 100 } },
                     { new: true }
                 ).then(() => {
                     delete rooms[room];

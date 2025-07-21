@@ -117,9 +117,12 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto mt-16">
-                    <h1 className="text-3xl font-bold text-white mb-8">
+                    <h1 className="text-3xl font-bold text-white mb-4">
                         Classic Quizzes
                     </h1>
+                    <div className="mb-6 text-lg text-gray-200">
+                        Choose a topic you like and test your knowledge in classic quizzes!
+                    </div>
                     {/* Dashboard content will go here */}
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {/* Placeholder cards for dashboard content */}
@@ -138,9 +141,12 @@ export default function Dashboard() {
                     </div>
                 </div>
                 <div className="max-w-7xl mx-auto mt-16">
-                    <h1 className="text-3xl font-bold text-white mb-8">
+                    <h1 className="text-3xl font-bold text-white mb-4">
                         Multiplayer Battles
                     </h1>
+                    <div className="mb-6 text-lg text-gray-200">
+                        Join a room and fight against your opponents in real-time quiz battles! Earn points, level up, and climb the leaderboard!
+                    </div>
                     {/* Dashboard content will go here */}
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <div onClick={()=>{handleNavigation('/multiplayer')}} className="outline-double bg-gray-700 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg hover:transform hover:scale-105 hover:bg-gray-600 transition duration-300">

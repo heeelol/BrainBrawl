@@ -191,7 +191,7 @@ export default function Multiplayer() {
             setWinner(data.winner);
 
             if (user.name === data.winner) {
-                toast.success("You won! + 100 points, +50 XP 🎊");
+                toast.success("You won! + 100 points, + 100 coins, + 50 XP 🎊");
             }
         })
 

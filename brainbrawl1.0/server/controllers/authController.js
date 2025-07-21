@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const {getQuizModel} = require("../models/quiz");
+const Ownership = require('../models/ownership');
 const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
 const { xpForLevel, getLevelFromXP, getXPProgress } = require('../helpers/xp');
@@ -136,15 +137,6 @@ const requireAuth = (req, res, next) => {
     }
 }
 
-// const getQuizQuestions = async (req, res) => {
-//     try {
-//         const questions = await General.find({});
-//         res.json(questions);
-//     } catch (err) {
-//         res.status(500).json({ error: 'Failed to fetch quiz data' });
-//     }
-// };
-
 const getQuizQuestions = async (req, res) => {
     const topic = req.params.topic;
     try {
@@ -187,6 +179,71 @@ const getLevel = async (req, res) => {
     }
 }
 
+const getCoins = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).lean();
+        const coins = user.coins || 0;
+        res.json(coins);
+    } catch (error) {
+        res.status(500).json({error: 'Failed to fetch coins'});
+    }
+}
+
+const getOwnedItems = async (req, res) => {
+    try {
+        const user = await Ownership.findOne({ user_email: req.user.email }).lean();
+        const itemList = user.item_list || [];
+        res.json(itemList);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch owned items' });
+    }
+}
+
+const deductCoins = async (req, res) => {
+    try {
+        const {email, minus_coins} = req.body;
+        // Check if name was entered
+        console.log(minus_coins);
+        if(!email) {
+            return res.json({
+                error: 'email is required'
+            })
+        }
+
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $inc: { coins: -minus_coins} },
+            { new: true }
+        )
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const addOwnedItems = async (req, res) => {
+    try {
+        const {user_email, item_id} = req.body;
+        // Check if name was entered
+        if(!user_email) {
+            return res.json({
+                error: 'email is required'
+            })
+        }
+
+        const user = await Ownership.findOneAndUpdate(
+            { user_email: user_email },
+            { $addToSet: { item_list: {item_id: item_id} } },
+            { new: true }
+        )
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     test,
     registerUser,
@@ -196,5 +253,9 @@ module.exports = {
     requireAuth,
     getQuizQuestions,
     getLeaderboard,
-    getLevel
+    getLevel,
+    getCoins,
+    getOwnedItems,
+    deductCoins,
+    addOwnedItems
 }

@@ -16,6 +16,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Multiplayer from "./pages/Multiplayer.jsx"; // Add this import
 import Leaderboard from "./pages/Leaderboard";
 import LoggedInProtect from "./components/LoggedInProtect.jsx";
+import Shop from "./pages/Shop.jsx";
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -32,6 +33,7 @@ function App() {
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route path="/" element={<>
+            <PageTitle title="Home" />
             <header className="sticky top-0 z-50 flex justify-center items-center">
                 <div className="xl:max-w-full w-full">
                     <Navbar_2 />
@@ -87,6 +89,19 @@ function App() {
                 <Leaderboard />
             </>
           </ProtectedRoute>} />
+          <Route path="/shop" element={
+            <ProtectedRoute>
+                <>
+                <PageTitle title="Shop" />
+                <header className="sticky top-0 z-50 flex justify-center items-center">
+                    <div className="xl:max-w-full w-full">
+                        <Navbar />
+                    </div>
+                </header>
+                <Shop />
+                </>
+            </ProtectedRoute>
+          } />
       </Routes>
     </UserContextProvider> 
   )

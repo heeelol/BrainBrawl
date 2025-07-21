@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
-const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions, getLeaderboard, getLevel} = require('../controllers/authController');
+const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions, getLeaderboard, getLevel,
+    getCoins, deductCoins, addOwnedItems, getOwnedItems
+} = require('../controllers/authController');
 
 // Define frontend URL
 const FRONTEND_URL = process.env.NODE_ENV === 'production'
@@ -27,6 +29,10 @@ router.get('/dashboard', requireAuth, (req, res) => {
 router.get('/quiz/:topic', getQuizQuestions);
 router.get('/leaderboard', getLeaderboard);
 router.get('/level', requireAuth, getLevel);
+router.get('/coins', requireAuth, getCoins);
+router.get('/owned-items', requireAuth, getOwnedItems);
+router.post('/update-coins', deductCoins);
+router.post('/update-ownership', addOwnedItems);
 
 module.exports = router;
 
