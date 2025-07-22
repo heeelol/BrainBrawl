@@ -18,7 +18,7 @@ import Leaderboard from "./pages/Leaderboard";
 import LoggedInProtect from "./components/LoggedInProtect.jsx";
 import Shop from "./pages/Shop.jsx";
 
-axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
