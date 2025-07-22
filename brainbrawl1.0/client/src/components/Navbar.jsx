@@ -11,7 +11,7 @@ import logo from '../assets/brainbrawl_icon.png';
 const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
-        { name: 'Shop', href: '#', current: false },
+        { name: 'Shop', href: '/shop', current: false },
         { name: 'Leaderboard', href: '/leaderboard', current: false },
         { name: 'Social', href: '#', current: false },
     ] : [])
@@ -63,11 +63,15 @@ export default function Navbar() {
                     </div>
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                         <div className="flex shrink-0 items-center">
-                            <img
-                                alt="BrainBrawl"
-                                src={logo}
-                                className="h-10 w-auto"
-                            />
+                            <Link
+                                to="/"
+                            >
+                                <img
+                                    alt="BrainBrawl"
+                                    src={logo}
+                                    className="h-10 w-auto"
+                                />
+                            </Link>
                         </div>
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex space-x-4">

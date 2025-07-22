@@ -5,9 +5,9 @@ import io from 'socket.io-client';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-var socket = io('https://brainbrawl-backend-bw7x.onrender.com', {
-  transports: ['websocket'],
-  withCredentials: true
+const socket = io('http://localhost:8000', {
+    transports: ['websocket'],
+    withCredentials: true
 });
 
 export default function Multiplayer() {
@@ -62,7 +62,7 @@ export default function Multiplayer() {
             setAnswered(true);
             setAnswerDelay(true);
             socket.emit('submitAnswer', roomCode, answerIndex);
-            setTimeout(() => setAnswerDelay(false), 1200); // 1.2s delay
+            setTimeout(() => setAnswerDelay(false), 2000); // 2s delay
         }
     };
 
@@ -191,7 +191,7 @@ export default function Multiplayer() {
             setWinner(data.winner);
 
             if (user.name === data.winner) {
-                toast.success("You won! + 100 points, +50 XP 🎊");
+                toast.success("You won! + 100 points, + 100 coins, + 50 XP 🎊");
             }
         })
 
@@ -213,7 +213,10 @@ export default function Multiplayer() {
         }
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
-                <h1 className="text-4xl font-bold text-white mb-6">Victory!</h1>
+                { user.name === winner ?
+                    <h1 className="text-4xl font-bold text-white mb-6">Victory!</h1> :
+                    <h1 className="text-4xl font-bold text-white mb-6">Defeat!</h1>
+                }
                 <p className="text-2xl text-indigo-300 mb-8">Winner: {winnerName}</p>
                 <button
                     className="px-6 py-2 rounded bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition mb-2"

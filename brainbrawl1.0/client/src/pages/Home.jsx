@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
+import {UserContext} from "../../context/userContext.jsx";
 
 function AnimatedBackground() {
     return (
@@ -23,6 +24,7 @@ function AnimatedBackground() {
 
 export default function Home() {
     const navigate = useNavigate();
+    const {user} = useContext(UserContext);
 
     return (
         <div className="relative min-h-screen bg-gradient-to-b from-gray-900 to-indigo-900">
@@ -40,22 +42,33 @@ export default function Home() {
                                     Challenge other players in real-time quiz battles. Level up your knowledge, earn rewards, and climb the leaderboard!
                                 </p>
                                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                                    <div className="rounded-md shadow">
-                                        <button
-                                            onClick={() => navigate('/register')}
-                                            className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                                        >
-                                            Start Battle
-                                        </button>
-                                    </div>
-                                    <div className="mt-3 sm:mt-0 sm:ml-3">
-                                        <button
-                                            onClick={() => navigate('/login')}
-                                            className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
-                                        >
-                                            Login
-                                        </button>
-                                    </div>
+                                    { user?.name ? <>
+                                        <div className="rounded-md shadow">
+                                            <button
+                                                onClick={() => navigate('/dashboard')}
+                                                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                                            >
+                                                Return to Battle
+                                            </button>
+                                        </div>
+                                    </> : <>
+                                        <div className="rounded-md shadow">
+                                            <button
+                                                onClick={() => navigate('/register')}
+                                                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                                            >
+                                                Start Battle
+                                            </button>
+                                        </div>
+                                        <div className="mt-3 sm:mt-0 sm:ml-3">
+                                            <button
+                                                onClick={() => navigate('/login')}
+                                                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
+                                            >
+                                                Login
+                                            </button>
+                                        </div>
+                                    </> }
                                 </div>
                             </div>
                         </main>

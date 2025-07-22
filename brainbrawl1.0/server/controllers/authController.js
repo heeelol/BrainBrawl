@@ -1,5 +1,6 @@
 const User = require('../models/user');
-const General = require("../models/quiz");
+const {getQuizModel} = require("../models/quiz");
+const Ownership = require('../models/ownership');
 const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
 const { xpForLevel, getLevelFromXP, getXPProgress } = require('../helpers/xp');
@@ -95,7 +96,7 @@ const getProfile = (req, res) => {
         jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
             if (err) throw err;
             res.set({
-                'Access-Control-Allow-Origin': 'https://brainbrawl-frontend.vercel.app',
+                'Access-Control-Allow-Origin': 'http://localhost:5173',
                 'Access-Control-Allow-Credentials': 'true'
             }).json(user);
         });
@@ -137,8 +138,10 @@ const requireAuth = (req, res, next) => {
 }
 
 const getQuizQuestions = async (req, res) => {
+    const topic = req.params.topic;
     try {
-        const questions = await General.find({});
+        const quizModel = getQuizModel(topic);
+        const questions = await quizModel.find({});
         res.json(questions);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch quiz data' });
@@ -176,6 +179,79 @@ const getLevel = async (req, res) => {
     }
 }
 
+const getCoins = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).lean();
+        const coins = user.coins || 0;
+        res.json(coins);
+    } catch (error) {
+        res.status(500).json({error: 'Failed to fetch coins'});
+    }
+}
+
+const getOwnedItems = async (req, res) => {
+    try {
+        // Create ownership record if it doesn't exist
+        let ownership = await Ownership.findOne({ user_email: req.user.email }).lean();
+        if (!ownership) {
+            ownership = await Ownership.create({ 
+                user_email: req.user.email, 
+                item_list: [] 
+            });
+        }
+        const itemList = ownership.item_list || [];
+        res.json(itemList);
+    } catch (error) {
+        console.log("getOwnedItems error:", error);
+        res.status(500).json({ error: 'Failed to fetch owned items' });
+    }
+}
+
+const deductCoins = async (req, res) => {
+    try {
+        const {email, minus_coins} = req.body;
+        // Check if name was entered
+        console.log(minus_coins);
+        if(!email) {
+            return res.json({
+                error: 'email is required'
+            })
+        }
+
+        const user = await User.findOneAndUpdate(
+            { email: email },
+            { $inc: { coins: -minus_coins} },
+            { new: true }
+        )
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const addOwnedItems = async (req, res) => {
+    try {
+        const {user_email, item_id} = req.body;
+        // Check if name was entered
+        if(!user_email) {
+            return res.json({
+                error: 'email is required'
+            })
+        }
+
+        const user = await Ownership.findOneAndUpdate(
+            { user_email: user_email },
+            { $addToSet: { item_list: {item_id: item_id} } },
+            { new: true }
+        )
+
+        return res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     test,
     registerUser,
@@ -185,5 +261,9 @@ module.exports = {
     requireAuth,
     getQuizQuestions,
     getLeaderboard,
-    getLevel
+    getLevel,
+    getCoins,
+    getOwnedItems,
+    deductCoins,
+    addOwnedItems
 }

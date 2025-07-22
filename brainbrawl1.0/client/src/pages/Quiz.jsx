@@ -1,13 +1,15 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import axios from "axios";
 
-export default function Quiz() {
+export default function Quiz({ topic }) {
     // Add new state for timer control
     // const [isPaused, setIsPaused] = useState(false);
+    const params = useParams();
+    const selectedTopic = topic || params.topic || 'general';
 
     const [quizData, setQuizData] = useState([]);
     let [index, setIndex] = useState(0);
@@ -27,13 +29,13 @@ export default function Quiz() {
     let options = [option1, option2, option3, option4];
 
     useEffect(() => {
-        axios.get('/quiz')
+        axios.get(`/quiz/${selectedTopic}`)
             .then(res => {
                 setQuizData(res.data);
                 setQuestions(res.data[index]);
             })
             .catch(err => console.error(err));
-    }, []);
+    }, [selectedTopic]);
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {
@@ -119,7 +121,7 @@ export default function Quiz() {
 
     return (
         <>
-            <PageTitle title="Quiz - General Knowledge" />
+            <PageTitle title={`Quiz - ${selectedTopic}`} />
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="text-center">
@@ -165,8 +167,7 @@ export default function Quiz() {
                                 </div>
                             </> : <>
                                 <h2 className="text-gray-200 text-2xl font-bold">
-                                    {index + 1}.
-                                    {questions.question}
+                                    {index + 1}. {questions.question}
                                 </h2>
 
                                 <div className="relative mt-5"> {/* Divider without text */}

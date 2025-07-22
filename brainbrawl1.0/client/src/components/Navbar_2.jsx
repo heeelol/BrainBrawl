@@ -1,10 +1,16 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
-import {ArrowRightEndOnRectangleIcon, Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
+import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/react'
+import {ArrowRightEndOnRectangleIcon, Bars3Icon, ComputerDesktopIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import logo from '../assets/brainbrawl_text_dark.png';
+import {Link, useNavigate} from "react-router-dom";
+import {useContext} from "react";
+import {UserContext} from "../../context/userContext.jsx";
+import {BellIcon, UserCircleIcon} from "@heroicons/react/24/outline/index.js";
+import axios from "axios";
+import {toast} from "react-hot-toast";
 
-const navigation = [
+const getNavigation = [
     { name: 'Home', href: '/', current: false },
-    { name: 'About', href: '#', current: false },
+    { name: 'About', href: '/about', current: false },
     { name: 'Contact Us', href: '#', current: false },
 ]
 
@@ -13,6 +19,27 @@ function classNames(...classes) {
 }
 
 export default function Navbar_2() {
+    const {user, setUser} = useContext(UserContext);
+    const navigate = useNavigate();
+    const navigation = getNavigation;
+
+    const handleLogout = async () => {
+        try {
+            await axios.post('/logout');
+            setUser(null);
+            toast.success('Logged out successfully');
+            navigate('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+            toast.error('Error logging out');
+        }
+    };
+
+    const handleNavigation = (e, href) => {
+        e.preventDefault();
+        navigate(href);
+    };
+
     return (
         <Disclosure as="nav" className="bg-indigo-950">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -28,11 +55,15 @@ export default function Navbar_2() {
                     </div>
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                         <div className="flex shrink-0 items-center">
-                            <img
-                                alt="BrainBrawl"
-                                src={logo}
-                                className="h-8 w-auto"
-                            />
+                            <Link
+                                to="/"
+                            >
+                                <img
+                                    alt="BrainBrawl"
+                                    src={logo}
+                                    className="h-8 w-auto"
+                                />
+                            </Link>
                         </div>
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex space-x-4">
@@ -41,8 +72,9 @@ export default function Navbar_2() {
                                         key={item.name}
                                         href={item.href}
                                         aria-current={item.current ? 'page' : undefined}
+                                        onClick={(e) => handleNavigation(e, item.href)}
                                         className={classNames(
-                                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                            item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-indigo-700 hover:text-white',
                                             'rounded-md px-3 py-2 text-sm font-medium',
                                         )}
                                     >
@@ -53,16 +85,84 @@ export default function Navbar_2() {
                         </div>
                     </div>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                        <a href="/login">
-                            <button
-                                type="button"
-                                className="relative rounded-full bg-indigo-950 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden"
+                        { user?.name ? <>
+                            {/*<Link to="/dashboard">*/}
+                            {/*    <button*/}
+                            {/*        type="button"*/}
+                            {/*        className="relative rounded-full bg-indigo-950 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden"*/}
+                            {/*    >*/}
+                            {/*        <span className="absolute -inset-1.5" />*/}
+                            {/*        <span className="sr-only">Go to Dashboard</span>*/}
+                            {/*        <ComputerDesktopIcon aria-hidden="true" className="size-6" />*/}
+                            {/*    </button>*/}
+                            {/*</Link>*/}
+
+                            {/* Profile dropdown */}
+                            <Menu as="div" className="relative ml-3">
+                                <div>
+                                    <MenuButton className="relative flex rounded-full bg-indigo-950 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden">
+                                        <span className="absolute -inset-1.5" />
+                                        <span className="sr-only">Open user menu</span>
+                                        {/*<img*/}
+                                        {/*    alt=""*/}
+                                        {/*    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"*/}
+                                        {/*    className="size-8 rounded-full"*/}
+                                        {/*/>*/}
+                                        <UserCircleIcon aria-hidden="true" className="size-8 rounded-full text-gray-400" />
+                                    </MenuButton>
+                                </div>
+                                <MenuItems
+                                    transition
+                                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                                >
+                                    <MenuItem>
+                                        <Link
+                                            to="/dashboard"
+                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Open Dashboard
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Link
+                                            to="/profile"
+                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Your Profile
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Link
+                                            to="/settings"
+                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Settings
+                                        </Link>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Sign out
+                                        </button>
+                                    </MenuItem>
+                                </MenuItems>
+                            </Menu>
+                        </> : <>
+                            <Link
+                                to="/login"
                             >
-                                <span className="absolute -inset-1.5" />
-                                <span className="sr-only">View notifications</span>
-                                <ArrowRightEndOnRectangleIcon aria-hidden="true" className="size-6" />
-                            </button>
-                        </a>
+                                <button
+                                    type="button"
+                                    className="relative rounded-full bg-indigo-950 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-950 focus:outline-hidden"
+                                >
+                                    <span className="absolute -inset-1.5" />
+                                    <span className="sr-only">Log In</span>
+                                    <ArrowRightEndOnRectangleIcon aria-hidden="true" className="size-6" />
+                                </button>
+                            </Link>
+                        </>}
                     </div>
                 </div>
             </div>
@@ -75,6 +175,7 @@ export default function Navbar_2() {
                             as="a"
                             href={item.href}
                             aria-current={item.current ? 'page' : undefined}
+                            onClick={(e) => handleNavigation(e, item.href)}
                             className={classNames(
                                 item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                 'block rounded-md px-3 py-2 text-base font-medium',
