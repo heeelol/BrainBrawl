@@ -25,9 +25,16 @@ export default function Shop() {
 
     useEffect(() => {
         axios.get('/owned-items')
-            .then(res => setRedeemed(res.data))
+            .then(res => {
+                 if (Array.isArray(res.data)) {
+                    const itemIds = res.data.map(item => item.item_id);
+                    setRedeemed(itemIds);
+                } else {
+                    setRedeemed([]);
+                }
+            })
             .catch(() => setRedeemed([]));
-    }, []);
+    }, [coins]);
 
     // const modifyPoints = async (e, item) => {
     //     e.preventDefault();
@@ -79,12 +86,7 @@ export default function Shop() {
             toast("This item has already been purchased.");
             return;
         }
-        // Update user points and redeemed items (simulate backend call)
-        // setUser({ ...user, coins: user?.coins - item.cost });
-        // setRedeemed([...redeemed, item.id]);
-        // toast.success(`Successfully purchased ${item.name}!`);
-        // modifyPoints(item);
-        // modifyOwnership(item);
+      
         const { email, minus_coins } = { email: user?.email, minus_coins: item.cost };
         console.log(email, minus_coins);
         try {
@@ -96,6 +98,8 @@ export default function Shop() {
                 toast.error(data.error)
             }
             else {
+                setCoins(prevCoins => prevCoins - item.cost)
+                
                 toast.success(`Successfully purchased ${item.name}!`);
                 const { user_email, item_id } = { user_email: user?.email, item_id: item.id };
                 try {
@@ -105,10 +109,10 @@ export default function Shop() {
                     })
                     if (data.error) {
                         toast.error(data.error)
+                    } 
+                    else {
+                        setRedeemed(prevRedeemed => [...prevRedeemed, item.id])
                     }
-                    // else {
-                    //     setRedeemed([...redeemed, item.id]);
-                    // }
                 }
                 catch (error) {
                     console.log(error);
@@ -121,7 +125,6 @@ export default function Shop() {
         }
     };
 
-    console.log(redeemed, coins, redeemed[0], Object.keys(redeemed).includes("cat_pfp"));
 
     return (
         <>

@@ -191,10 +191,18 @@ const getCoins = async (req, res) => {
 
 const getOwnedItems = async (req, res) => {
     try {
-        const user = await Ownership.findOne({ user_email: req.user.email }).lean();
-        const itemList = user.item_list || [];
+        // Create ownership record if it doesn't exist
+        let ownership = await Ownership.findOne({ user_email: req.user.email }).lean();
+        if (!ownership) {
+            ownership = await Ownership.create({ 
+                user_email: req.user.email, 
+                item_list: [] 
+            });
+        }
+        const itemList = ownership.item_list || [];
         res.json(itemList);
     } catch (error) {
+        console.log("getOwnedItems error:", error);
         res.status(500).json({ error: 'Failed to fetch owned items' });
     }
 }

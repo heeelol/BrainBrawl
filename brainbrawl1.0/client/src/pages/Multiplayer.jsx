@@ -62,7 +62,7 @@ export default function Multiplayer() {
             setAnswered(true);
             setAnswerDelay(true);
             socket.emit('submitAnswer', roomCode, answerIndex);
-            setTimeout(() => setAnswerDelay(false), 1200); // 1.2s delay
+            setTimeout(() => setAnswerDelay(false), 2000); // 2s delay
         }
     };
 
