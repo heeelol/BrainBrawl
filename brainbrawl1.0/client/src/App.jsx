@@ -13,12 +13,13 @@ import Dashboard from './pages/Dashboard.jsx';
 import Quiz from "./pages/Quiz.jsx";
 import PageTitle from "./components/PageTitle.jsx";
 import ProtectedRoute from './components/ProtectedRoute';
-import Multiplayer from "./pages/Multiplayer.jsx"; // Add this import
+import Multiplayer from "./pages/Multiplayer.jsx"; 
 import Leaderboard from "./pages/Leaderboard";
 import LoggedInProtect from "./components/LoggedInProtect.jsx";
+import Insights from "./pages/Insights.jsx";
 import Shop from "./pages/Shop.jsx";
 
-axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -100,6 +101,19 @@ function App() {
                 </header>
                 <Shop />
                 </>
+            </ProtectedRoute>
+          } />
+          <Route path="/insights" element={
+            <ProtectedRoute>
+              <>
+              <PageTitle title="Insights"/>
+              <header className="sticky top-0 z-50 flex justify-center items-center">
+                    <div className="xl:max-w-full w-full">
+                        <Navbar />
+                    </div>
+              </header>
+              <Insights />
+              </>
             </ProtectedRoute>
           } />
       </Routes>

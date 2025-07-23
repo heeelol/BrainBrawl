@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const QuizStat = require('../models/quizStat');
 const {getQuizModel} = require("../models/quiz");
 const Ownership = require('../models/ownership');
 const { hashPassword, comparePassword } = require('../helpers/auth');
@@ -96,7 +97,7 @@ const getProfile = (req, res) => {
         jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
             if (err) throw err;
             res.set({
-                'Access-Control-Allow-Origin': 'https://brainbrawl-frontend.vercel.app',
+                'Access-Control-Allow-Origin': 'http://localhost:5173',
                 'Access-Control-Allow-Credentials': 'true'
             }).json(user);
         });
@@ -179,6 +180,21 @@ const getLevel = async (req, res) => {
     }
 }
 
+const gainXP = async (req, res) => {
+    try {
+            const { xp } = req.body;
+
+            await User.findOneAndUpdate(
+                    { name: req.user.name },
+                    { $inc: { xp: xp } },
+                    { new: true }
+                );
+                res.status(200).json({ message: 'XP updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update xp' });
+    }
+}
+
 const getCoins = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).lean();
@@ -252,6 +268,38 @@ const addOwnedItems = async (req, res) => {
     }
 }
 
+const updateQuizStats = async (req, res) => {
+    try {
+        const { topic, date, answers, score, xpGained } = req.body;
+
+        const user_email = req.user.email;
+
+        const quizStat = new QuizStat({
+            user_email,
+            topic, 
+            date,
+            answers,
+            score,
+            xpGained,
+        });
+        await quizStat.save();
+        
+        res.status(200).json({ message: 'Quiz stats successfully saved'});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getStats = async (req, res) => {
+    try {
+        const stats = await QuizStat.find( {user_email: req.user.email }).sort( {date: -1 } );
+        res.status(200).json(stats);
+    } catch (error) {
+        res.status(500).json( { error: 'Failed to fetch quiz stats'} );
+    }
+}
+
+
 module.exports = {
     test,
     registerUser,
@@ -262,8 +310,11 @@ module.exports = {
     getQuizQuestions,
     getLeaderboard,
     getLevel,
+    gainXP,
     getCoins,
     getOwnedItems,
     deductCoins,
-    addOwnedItems
+    addOwnedItems,
+    updateQuizStats,
+    getStats
 }
