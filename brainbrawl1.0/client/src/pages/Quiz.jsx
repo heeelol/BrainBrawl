@@ -6,8 +6,6 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import axios from "axios";
 
 export default function Quiz({ topic }) {
-    // Add new state for timer control
-    // const [isPaused, setIsPaused] = useState(false);
     const params = useParams();
     const selectedTopic = topic || params.topic || 'general';
 
@@ -17,8 +15,6 @@ export default function Quiz({ topic }) {
     const [lock, setLock] = useState(false);
     const [score, setScore] = useState(0);
     const [result, setResult] = useState(false);
-
-    // Add new state for timer control
     const [isPaused, setIsPaused] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
 

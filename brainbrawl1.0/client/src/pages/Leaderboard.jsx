@@ -12,7 +12,7 @@ export default function Leaderboard() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 flex flex-col items-center py-12">
-            <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 mb-10 drop-shadow-lg tracking-wide animate-pulse">
+            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 mb-10 drop-shadow-lg tracking-wide animate-pulse">
                 🏆 Leaderboard 🏆
             </h1>
             <div className="bg-gray-900 bg-opacity-80 rounded-2xl shadow-2xl p-10 w-full max-w-2xl border-4 border-gradient-to-r from-yellow-400 via-pink-500 to-purple-500">

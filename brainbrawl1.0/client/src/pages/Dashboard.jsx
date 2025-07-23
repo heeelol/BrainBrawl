@@ -123,9 +123,8 @@ export default function Dashboard() {
                     <div className="mb-6 text-lg text-gray-200">
                         Choose a topic you like and test your knowledge in classic quizzes!
                     </div>
-                    {/* Dashboard content will go here */}
+                    
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {/* Placeholder cards for dashboard content */}
                         {topics.map(topic => (
                             <div
                                 key={topic.key}

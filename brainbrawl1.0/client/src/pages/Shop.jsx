@@ -131,7 +131,7 @@ export default function Shop() {
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900">
                 <div className="pt-16 px-4 sm:px-6 lg:px-8"> {/* Added pt-16 to account for Navbar height */}
                     <div className="max-w-7xl mx-auto">
-                        <h1 className="text-3xl font-bold text-white mb-8">Shop</h1>
+                        <h1 className="text-4xl font-bold text-white mb-8 flex justify-center items-center animate-pulse">Cosmetic Shop</h1>
                         <div className="mb-6 text-lg text-gray-200">
                             Your Coins: <span className="font-semibold">{coins || 0}</span>
                         </div>
