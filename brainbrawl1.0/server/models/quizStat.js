@@ -10,7 +10,7 @@ const quizStatSchema = new Schema({
         type: String
     },
     date: {
-        type: Date, default: Data.Now
+        type: Date, default: Date.now
     },
     answers: [
         {
@@ -23,3 +23,5 @@ const quizStatSchema = new Schema({
     score: Number,
     xpGained: Number
 })
+
+module.exports = mongoose.model('QuizStat', quizStatSchema);

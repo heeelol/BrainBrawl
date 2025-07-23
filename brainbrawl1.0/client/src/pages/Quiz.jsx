@@ -5,6 +5,7 @@ import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import axios from "axios";
 import { toast } from 'react-hot-toast';
+import { AnimateSharedLayout } from 'framer-motion';
 
 export default function Quiz({ topic }) {
     const params = useParams();
@@ -18,6 +19,8 @@ export default function Quiz({ topic }) {
     const [result, setResult] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
+    const [userAnswers, setUserAnswers] = useState([]);
+    const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
     let option1 = useRef(null);
     let option2 = useRef(null);
@@ -39,13 +42,31 @@ export default function Quiz({ topic }) {
         {
             const amount = (score / 5) * 100;
 
+            const now = new Date();
+            const sgDate = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+
+            const attemptData = {
+                topic: selectedTopic,
+                date: sgDate,
+                answers: userAnswers,
+                score: score,
+                xpGained: amount
+            };
+
             axios.post('/gainXP', { xp: amount } )
                 .then()
                 .catch(err => console.error(err));
 
-            toast.success(`Gained +${amount} xp!`)
+            axios.post('/quizStats', attemptData)
+                 .then()
+                 .catch(err => console.error(err));
+
+            toast.success(`Gained +${amount} xp!`);
         }
     }, [result]);
+
+
+
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {
@@ -61,7 +82,21 @@ export default function Quiz({ topic }) {
     const checkAnswer = (event, ans) => {
         if (!lock) {
             setSelectedOption(ans);
-            if (questions.ans === ans) {
+            const isCorrect = questions.ans === ans;
+            const timeTaken = (Date.now() - questionStartTime) / 1000;
+            setQuestionStartTime(Date.now() + 1200);
+
+            setUserAnswers(prev => [
+                ...prev,
+                {
+                    question: questions.question,
+                    selected: ans,
+                    correct: isCorrect,
+                    timeTaken: timeTaken
+                }
+            ])
+
+            if (isCorrect) {
                 setScore(prev => prev + 1);
             }
             setLock(true);
@@ -106,22 +141,6 @@ export default function Quiz({ topic }) {
             setIsPaused(false); // Resume timer
         }, 2000);
     };
-
-    const nextQuestion = () => {
-        if (lock) {
-            if (index === quizData.length - 1) {
-                setResult(true);
-                return 0;
-            }
-            setIndex(++index);
-            setQuestions(quizData[index]);
-            setLock(false);
-            options.map((option) => {
-                option.current.classList.remove('correct', 'incorrect');
-                return null;
-            });
-        }
-    }
 
     console.log(quizData);
     console.log(questions);

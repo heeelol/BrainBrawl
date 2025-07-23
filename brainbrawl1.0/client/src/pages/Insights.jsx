@@ -26,9 +26,9 @@ export default function Insights() {
     { topic: 'Geography', accuracy: 90 },
     ];
     const recentQuizzes = [
-    { date: '2024-06-20', score: '8/10', xp: '120'},
-    { date: '2024-06-18', score: '6/10', xp: '80'},
-    { date: '2024-06-15', score: '9/10', xp: '140'},
+    { date: '2024-06-20', score: '3', xp: '60'},
+    { date: '2024-06-18', score: '2', xp: '40'},
+    { date: '2024-06-15', score: '4', xp: '80'},
     ];
 
     return (
@@ -93,7 +93,7 @@ export default function Insights() {
             {recentQuizzes.map((quiz, idx) => (
                 <div key={idx} className="bg-[#2b2b50] rounded-lg shadow p-4 flex flex-col items-center">
                     <span className="text-gray-500 text-xs mb-1">{quiz.date}</span>
-                    <span className="font-bold text-lg mb-1 text-white">Score: {quiz.score}</span>
+                    <span className="font-bold text-lg mb-1 text-white">Score: {quiz.score}/5</span>
                     <span className="text-green-600 font-semibold">+{quiz.xp} XP</span>
                 </div>
             ))}

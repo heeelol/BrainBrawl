@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const QuizStat = require('../models/quizStat');
 const {getQuizModel} = require("../models/quiz");
 const Ownership = require('../models/ownership');
 const { hashPassword, comparePassword } = require('../helpers/auth');
@@ -267,6 +268,28 @@ const addOwnedItems = async (req, res) => {
     }
 }
 
+const updateQuizStats = async (req, res) => {
+    try {
+        const { topic, date, answers, score, xpGained } = req.body;
+
+        const user_email = req.user.email;
+
+        const quizStat = new QuizStat({
+            user_email,
+            topic, 
+            date,
+            answers,
+            score,
+            xpGained,
+        });
+        await quizStat.save();
+        
+        res.status(200).json({ message: 'Quiz stats successfully saved'});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     test,
     registerUser,
@@ -281,5 +304,6 @@ module.exports = {
     getCoins,
     getOwnedItems,
     deductCoins,
-    addOwnedItems
+    addOwnedItems,
+    updateQuizStats
 }
