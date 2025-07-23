@@ -5,7 +5,7 @@ import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import axios from "axios";
 import { toast } from 'react-hot-toast';
-import { AnimateSharedLayout } from 'framer-motion';
+
 
 export default function Quiz({ topic }) {
     const params = useParams();
@@ -57,16 +57,13 @@ export default function Quiz({ topic }) {
                 .then()
                 .catch(err => console.error(err));
 
-            axios.post('/quizStats', attemptData)
+            axios.post('/update-quizStats', attemptData)
                  .then()
                  .catch(err => console.error(err));
 
             toast.success(`Gained +${amount} xp!`);
         }
     }, [result]);
-
-
-
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {

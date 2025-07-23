@@ -99,7 +99,7 @@ export default function Dashboard() {
                                                 >
                                                     <td className="py-2">{player.rank}</td>
                                                     <td className="py-2 flex items-center gap-2">
-                                                        {idx === 0 && <span>🥇</span>}
+                                                        {idx === 0 && <span className="animate-bounce">🥇</span>}
                                                         {idx === 1 && <span>🥈</span>}
                                                         {idx === 2 && <span>🥉</span>}
                                                         <span>{player.name}</span>

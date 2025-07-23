@@ -290,6 +290,16 @@ const updateQuizStats = async (req, res) => {
     }
 }
 
+const getStats = async (req, res) => {
+    try {
+        const stats = await QuizStat.find( {user_email: req.user.email }).sort( {date: -1 } );
+        res.status(200).json(stats);
+    } catch (error) {
+        res.status(500).json( { error: 'Failed to fetch quiz stats'} );
+    }
+}
+
+
 module.exports = {
     test,
     registerUser,
@@ -305,5 +315,6 @@ module.exports = {
     getOwnedItems,
     deductCoins,
     addOwnedItems,
-    updateQuizStats
+    updateQuizStats,
+    getStats
 }
