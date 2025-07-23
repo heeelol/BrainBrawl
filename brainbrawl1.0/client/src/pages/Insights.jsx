@@ -39,11 +39,11 @@ export default function Insights() {
             <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0}} transition={{ duration: 2 }}>
                 <div className="grid grid-cols-1 gap-6">
                     <h3 className="text-2xl font-bold text-teal-500">Accuracy Over Time</h3>
-                    <div className="bg-white rounded-lg shadow-xl p-4 flex flex-col items-center">
+                    <div className="bg-[#2b2b50] rounded-lg shadow-xl p-4 ">
                         <ResponsiveContainer width="100%" height={180}>
                             <LineChart data={accuracyData}>
-                                <XAxis dataKey="date" />
-                                <YAxis domain={[0, 100]} />
+                                <XAxis dataKey="date" stroke="white" />
+                                <YAxis domain={[0, 100]} stroke="white" />
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <Tooltip />
                                 <Line type="monotone" dataKey="accuracy" stroke="#22c55e" />
@@ -53,12 +53,12 @@ export default function Insights() {
                 </div>
                 
                 <h3 className="text-2xl font-bold text-teal-500 mt-8">Avg Time per Question</h3>
-                <div className="bg-white rounded-lg shadow-xl p-4 mt-5 flex flex-col items-center">
+                <div className="bg-[#2b2b50] rounded-lg shadow-xl p-4 mt-5">
                     <ResponsiveContainer width="100%" height={180}>
                         <BarChart data={timeData} layout="vertical">
                             <CartesianGrid strokeDasharra="3 3" />
-                            <XAxis type="number" />
-                            <YAxis dataKey="topic" type="category"/>
+                            <XAxis type="number" stroke="white"/>
+                            <YAxis dataKey="topic" type="category" stroke="white"/>
                             <Tooltip />
                             <Bar dataKey="avgTime" fill="#3b82f6" />
                         </BarChart>
@@ -68,12 +68,12 @@ export default function Insights() {
 
         <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <h2 className="text-2xl font-bold mb-4 text-teal-500">Topic Breakdown</h2>
-            <div className="bg-white rounded-lg shadow p-4">
+            <div className="bg-[#2b2b50] rounded-lg shadow p-4">
                 <div className="flex justify-between mb-2">
-                    <span className="font-semibold">Accuracy by Topic</span>
+                    <span className="font-bold text-white border-b">Accuracy by Topic</span>
                     <button className="text-blue-500 text-sm hover:text-blue-400">Show Weakest First</button>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-3 text-white">
                     {topicAccuracy.map((t) => (
                     <div key={t.topic} className="flex items-center">
                         <span className="w-24 font-medium">{t.topic}</span>
@@ -91,15 +91,22 @@ export default function Insights() {
             <h2 className="text-2xl font-bold mb-4 text-teal-500">Recent Quizzes</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {recentQuizzes.map((quiz, idx) => (
-                <div key={idx} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <div key={idx} className="bg-[#2b2b50] rounded-lg shadow p-4 flex flex-col items-center">
                     <span className="text-gray-500 text-xs mb-1">{quiz.date}</span>
-                    <span className="font-bold text-lg mb-1">Score: {quiz.score}</span>
+                    <span className="font-bold text-lg mb-1 text-white">Score: {quiz.score}</span>
                     <span className="text-green-600 font-semibold">+{quiz.xp} XP</span>
                 </div>
             ))}
             </div>
         </motion.section>
-   
+
+        <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <h2 className="text-2xl font-bold mb-4 text-teal-500">Recommendations</h2>
+                <div className="bg-[#2b2b50] rounded-lg shadow p-4">
+                    <p className="mb-2 text-white">Based on your stats, you should revisit: <span className="font-semibold text-red-500">Algebra</span></p>
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Practice Algebra Quiz</button>
+                </div>
+        </motion.section>
         </div>
     )
 }
