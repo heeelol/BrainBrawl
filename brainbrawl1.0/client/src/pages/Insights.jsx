@@ -34,8 +34,8 @@ export default function Insights() {
     return (
 
 
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 max-w-screen mx-auto py-12 space-y-8">
-        <h1 className="text-4xl font-extrabold text-neutral-100 flex justify-center animate-pulse">Performance Overview</h1>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 space-y-8">
+        <h1 className="text-4xl font-bold text-neutral-100 flex justify-center animate-pulse pt-15">Performance Overview</h1>
             <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0}} transition={{ duration: 2 }}>
                 <div className="grid grid-cols-1 gap-6">
                     <h3 className="text-2xl font-bold text-teal-500">Accuracy Over Time</h3>
@@ -102,7 +102,7 @@ export default function Insights() {
 
         <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <h2 className="text-2xl font-bold mb-4 text-teal-500">Recommendations</h2>
-                <div className="bg-[#2b2b50] rounded-lg shadow p-4">
+                <div className="bg-[#2b2b50] rounded-lg shadow p-4 max-w-100">
                     <p className="mb-2 text-white">Based on your stats, you should revisit: <span className="font-semibold text-red-500">Algebra</span></p>
                     <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Practice Algebra Quiz</button>
                 </div>

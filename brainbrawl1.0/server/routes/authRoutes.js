@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
-const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions, getLeaderboard, getLevel,
+const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions, getLeaderboard, getLevel, gainXP, 
     getCoins, deductCoins, addOwnedItems, getOwnedItems
 } = require('../controllers/authController');
 
@@ -29,6 +29,7 @@ router.get('/dashboard', requireAuth, (req, res) => {
 router.get('/quiz/:topic', getQuizQuestions);
 router.get('/leaderboard', getLeaderboard);
 router.get('/level', requireAuth, getLevel);
+router.post('/gainxp', requireAuth, gainXP);
 router.get('/coins', requireAuth, getCoins);
 router.get('/owned-items', requireAuth, getOwnedItems);
 router.post('/update-coins', deductCoins);

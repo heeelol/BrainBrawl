@@ -179,6 +179,21 @@ const getLevel = async (req, res) => {
     }
 }
 
+const gainXP = async (req, res) => {
+    try {
+            const { xp } = req.body;
+
+            await User.findOneAndUpdate(
+                    { name: req.user.name },
+                    { $inc: { xp: xp } },
+                    { new: true }
+                );
+                res.status(200).json({ message: 'XP updated successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update xp' });
+    }
+}
+
 const getCoins = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).lean();
@@ -262,6 +277,7 @@ module.exports = {
     getQuizQuestions,
     getLeaderboard,
     getLevel,
+    gainXP,
     getCoins,
     getOwnedItems,
     deductCoins,

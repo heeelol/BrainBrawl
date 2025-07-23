@@ -4,6 +4,7 @@ import './Quiz.css'
 import PageTitle from "../components/PageTitle.jsx";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import axios from "axios";
+import { toast } from 'react-hot-toast';
 
 export default function Quiz({ topic }) {
     const params = useParams();
@@ -32,6 +33,19 @@ export default function Quiz({ topic }) {
             })
             .catch(err => console.error(err));
     }, [selectedTopic]);
+
+    useEffect(() => {
+        if (result)
+        {
+            const amount = (score / 5) * 100;
+
+            axios.post('/gainXP', { xp: amount } )
+                .then()
+                .catch(err => console.error(err));
+
+            toast.success(`Gained +${amount} xp!`)
+        }
+    }, [result]);
 
     const renderTime = ({ remainingTime }) => {
         if (remainingTime === 0) {
@@ -112,8 +126,6 @@ export default function Quiz({ topic }) {
     console.log(quizData);
     console.log(questions);
     console.log(index);
-    //console.log(questions.question);
-    //console.log(quizData[0]);
 
     return (
         <>
@@ -150,7 +162,6 @@ export default function Quiz({ topic }) {
                             </CountdownCircleTimer>
                         </div>
                         )}
-                        {/* End Timer */}
 
                         <div className="mt-0">
                             {result ? <>
