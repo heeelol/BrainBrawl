@@ -6,19 +6,9 @@ import { toast } from 'react-hot-toast';
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 import logo from '../assets/brainbrawl_icon.png';
-import cat_pfp from "../assets/cat_pfp.png";
-import dog_pfp from "../assets/dog_pfp.png";
-import robot_pfp from "../assets/robot_pfp.png";
+import { avatarMap } from "../assets/avatars.js";
 import noobbrain from "../assets/noobbrain.jpg";
 
-const avatarMap = {
-    cat_pfp: cat_pfp,
-    dog_pfp: dog_pfp,
-    robot_pfp: robot_pfp,
-    noobbrain: noobbrain
-}
-
-// Update navigation to be dynamic based on auth state
 const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
@@ -144,7 +134,7 @@ export default function Navbar() {
                                 <MenuItem>
                                     <Link
                                         to="/profile"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-400"
+                                        className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-teal-400"
                                     >
                                         Your Profile
                                     </Link>
@@ -152,7 +142,7 @@ export default function Navbar() {
                                 <MenuItem>
                                     <button
                                         onClick={handleLogout}
-                                        className="block w-full px-4 py-2 text-left text-sm text-stone-700 hover:text-red-400 hover:bg-teal-400"
+                                        className="block w-full px-4 py-2 text-left text-sm font-semibold text-stone-700 hover:text-red-400 hover:bg-teal-400"
                                     >
                                         Sign out
                                     </button>

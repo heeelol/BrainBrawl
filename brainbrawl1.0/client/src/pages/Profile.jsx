@@ -3,19 +3,10 @@ import { UserContext } from "../../context/userContext.jsx";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import backdrop from "../assets/backdrop.jpg"
 import mtfuji from "../assets/mtFuji.jpg";
 import noobbrain from "../assets/noobbrain.jpg";
-import backdrop from "../assets/backdrop.jpg";
-import cat_pfp from "../assets/cat_pfp.png";
-import dog_pfp from "../assets/dog_pfp.png";
-import robot_pfp from "../assets/robot_pfp.png";
-
-const avatarMap = {
-    cat_pfp: cat_pfp,
-    dog_pfp: dog_pfp,
-    robot_pfp: robot_pfp,
-    noobbrain: noobbrain
-}
+import { avatarMap } from "../assets/avatars.js";
 
 
 export default function Profile() {
@@ -44,7 +35,7 @@ export default function Profile() {
                 .then(res => {
                     if (res.data) {
                         setOwnedAvatars(res.data.item_list.map(item => item.item_id));
-                        setSelectedAvatar(res.data.selected_avatar || "");
+                        setSelectedAvatar(res.data.selected_avatar || noobbrain);
                     }
                 })
                 .catch(() => {
@@ -53,6 +44,7 @@ export default function Profile() {
                 });
         }
     }, [user]);
+
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();

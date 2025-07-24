@@ -1,16 +1,8 @@
 import {useContext, useEffect, useState} from "react";
 import {UserContext} from "../../context/userContext.jsx";
+import axios from 'axios';
 import {toast} from "react-hot-toast";
-import cat_pfp from "../assets/cat_pfp.png";
-import dog_pfp from "../assets/dog_pfp.png";
-import robot_pfp from "../assets/robot_pfp.png";
-import axios from "axios";
-
-const items = [
-    { id: "cat_pfp", name: "Cat Avatar", desc: "A cute cat avatar!", cost: 100, img: cat_pfp },
-    { id: "dog_pfp", name: "Dog Avatar", desc: "A cute dog avatar!", cost: 100, img: dog_pfp },
-    { id: "robot_pfp", name: "Robot Avatar", desc: "A funky robot avatar!", cost: 200, img: robot_pfp },
-];
+import { items } from "../assets/avatars.js";
 
 export default function Shop() {
     const { user } = useContext(UserContext);
@@ -101,7 +93,7 @@ export default function Shop() {
                                     key={item.id}
                                     className="bg-gray-700 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg flex flex-col items-center"
                                 >
-                                    <img src={item.img} alt={item.name} className="h-20 w-20 mb-4 rounded-full" />
+                                    <img src={item.img} alt={item.name} className={`h-20 w-20 mb-4 rounded-full ${item.style || ""}`} />
                                     <h2 className="text-xl font-semibold text-white mb-2">{item.name}</h2>
                                     <p className="text-gray-300 mb-4">{item.desc}</p>
                                     <div className="mb-4 text-indigo-300 font-bold">Cost: {item.cost} coins</div>

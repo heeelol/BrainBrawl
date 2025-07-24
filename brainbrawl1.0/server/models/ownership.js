@@ -14,7 +14,7 @@ const ownershipSchema = new Schema({
     item_list: [itemSchema],
     selected_avatar: { 
             type: String,
-            default: ""
+            default: "noobbrain"
         }
 });
 

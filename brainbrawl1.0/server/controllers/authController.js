@@ -230,7 +230,7 @@ const getOwnedItems = async (req, res) => {
             ownership = await Ownership.create({ 
                 user_email: req.user.email, 
                 item_list: [],
-                selected_avatar: ""
+                selected_avatar: "noobbrain"
             });
         }
         const itemList = ownership.item_list || [];
