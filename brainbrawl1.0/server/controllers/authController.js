@@ -111,7 +111,7 @@ const getProfile = (req, res) => {
            try {
                 const user = await User.findById(userData.id).select('-password');
                 res.set({
-                    'Access-Control-Allow-Origin': 'http://localhost:5173',
+                    'Access-Control-Allow-Origin': 'https://brainbrawl-frontend.vercel.app',
                     'Access-Control-Allow-Credentials': 'true'
                 }).json(user);
             } catch (error) {
