@@ -3,11 +3,12 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import {Bars3Icon, BellIcon, UserCircleIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 import logo from '../assets/brainbrawl_icon.png';
+import { avatarMap } from "../assets/avatars.js";
+import noobbrain from "../assets/noobbrain.jpg";
 
-// Update navigation to be dynamic based on auth state
 const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [
         { name: 'Dashboard', href: '/dashboard', current: false },
@@ -25,6 +26,7 @@ export default function Navbar() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
     const navigation = getNavigation(!!user);
+    const [selectedAvatar, setSelectedAvatar] = useState("");
 
     const handleLogout = async () => {
         try {
@@ -47,6 +49,20 @@ export default function Navbar() {
         }
         navigate(href);
     };
+
+    useEffect(() => {
+        if (user?.email) {
+             axios.get(`/ownership/${user.email}`)
+                .then(res => {
+                    if (res.data) {
+                        setSelectedAvatar(res.data.selected_avatar || "");
+                    }
+                })
+                .catch(() => {
+                    setSelectedAvatar("");
+                });
+        }
+    }, [user]);
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -104,41 +120,29 @@ export default function Navbar() {
                         {/* Profile dropdown */}
                         <Menu as="div" className="relative ml-3">
                             <div>
-                                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                                    <span className="absolute -inset-1.5" />
-                                    <span className="sr-only">Open user menu</span>
-                                    {/*<img*/}
-                                    {/*    alt=""*/}
-                                    {/*    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"*/}
-                                    {/*    className="size-8 rounded-full"*/}
-                                    {/*/>*/}
-                                    <UserCircleIcon aria-hidden="true" className="size-8 rounded-full text-gray-400" />
+                                <MenuButton className="relative flex rounded-full bg-gray-800 focus:ring-2 hover:scale-105">
+                                    <img
+                                        src={avatarMap[selectedAvatar] || noobbrain}
+                                        className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300"
+                                    />
                                 </MenuButton>
                             </div>
                             <MenuItems
                                 transition
-                                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-teal-500 py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                             >
                                 <MenuItem>
                                     <Link
                                         to="/profile"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-teal-400"
                                     >
                                         Your Profile
                                     </Link>
                                 </MenuItem>
                                 <MenuItem>
-                                    <Link
-                                        to="/settings"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Settings
-                                    </Link>
-                                </MenuItem>
-                                <MenuItem>
                                     <button
                                         onClick={handleLogout}
-                                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                                        className="block w-full px-4 py-2 text-left text-sm font-semibold text-stone-700 hover:text-red-400 hover:bg-teal-400"
                                     >
                                         Sign out
                                     </button>

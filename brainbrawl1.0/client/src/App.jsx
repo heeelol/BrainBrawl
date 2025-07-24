@@ -18,8 +18,9 @@ import Leaderboard from "./pages/Leaderboard";
 import LoggedInProtect from "./components/LoggedInProtect.jsx";
 import Insights from "./pages/Insights.jsx";
 import Shop from "./pages/Shop.jsx";
+import Profile from "./pages/Profile.jsx";
 
-axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -113,6 +114,14 @@ function App() {
                     </div>
               </header>
               <Insights />
+              </>
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <>
+              <PageTitle title="Profile"/>
+              <Profile />
               </>
             </ProtectedRoute>
           } />

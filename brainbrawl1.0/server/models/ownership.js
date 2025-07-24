@@ -11,7 +11,11 @@ const ownershipSchema = new Schema({
     user_email: {
         type: String,
     },
-    item_list: [itemSchema]
+    item_list: [itemSchema],
+    selected_avatar: { 
+            type: String,
+            default: "noobbrain"
+        }
 });
 
 module.exports = mongoose.model('Ownership', ownershipSchema);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const { test, registerUser, loginUser, getProfile, logoutUser, requireAuth, getQuizQuestions, getLeaderboard, getLevel, gainXP, 
-    getCoins, deductCoins, addOwnedItems, getOwnedItems, updateQuizStats, getStats
+    getCoins, deductCoins, addOwnedItems, getOwnedItems, updateQuizStats, getStats, updateProfile, getProfileOwnership
 } = require('../controllers/authController');
 
 // Define frontend URL
@@ -36,6 +36,8 @@ router.post('/update-coins', deductCoins);
 router.post('/update-ownership', addOwnedItems);
 router.post('/update-quizStats', requireAuth, updateQuizStats);
 router.get('/quizStats/:user_email', requireAuth, getStats);
+router.put('/updateProfile', requireAuth, updateProfile);
+router.get('/ownership/:email', requireAuth, getProfileOwnership)
 
 module.exports = router;
 
