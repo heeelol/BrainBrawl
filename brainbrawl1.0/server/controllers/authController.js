@@ -93,13 +93,21 @@ const loginUser = async (req, res) => {
 
 const getProfile = (req, res) => {
     const {token} = req.cookies;
+
+    if(!token) return res.json(null);
+
     if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
+        jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
             if (err) throw err;
-            res.set({
-                'Access-Control-Allow-Origin': 'http://localhost:5173',
-                'Access-Control-Allow-Credentials': 'true'
-            }).json(user);
+           try {
+                const user = await User.findById(userData.id).select('-password');
+                res.set({
+                    'Access-Control-Allow-Origin': 'http://localhost:5173',
+                    'Access-Control-Allow-Credentials': 'true'
+                }).json(user);
+            } catch (error) {
+                res.status(500).json({ error: "Failed to fetch user profile" });
+            }
         });
     } else {
         res.json(null);

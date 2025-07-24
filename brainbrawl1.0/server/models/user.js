@@ -23,6 +23,10 @@ const userSchema = new Schema({
         type: Number,
         default: 0,
     },
+    title: {
+        type: String,
+        default: "Noob",
+    }
 });
 
 const UserModel = mongoose.model('User', userSchema);
