@@ -3,9 +3,20 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import {Bars3Icon, BellIcon, UserCircleIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext.jsx';
 import logo from '../assets/brainbrawl_icon.png';
+import cat_pfp from "../assets/cat_pfp.png";
+import dog_pfp from "../assets/dog_pfp.png";
+import robot_pfp from "../assets/robot_pfp.png";
+import noobbrain from "../assets/noobbrain.jpg";
+
+const avatarMap = {
+    cat_pfp: cat_pfp,
+    dog_pfp: dog_pfp,
+    robot_pfp: robot_pfp,
+    noobbrain: noobbrain
+}
 
 // Update navigation to be dynamic based on auth state
 const getNavigation = (isAuthenticated) => [
@@ -25,6 +36,7 @@ export default function Navbar() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
     const navigation = getNavigation(!!user);
+    const [selectedAvatar, setSelectedAvatar] = useState("");
 
     const handleLogout = async () => {
         try {
@@ -47,6 +59,20 @@ export default function Navbar() {
         }
         navigate(href);
     };
+
+    useEffect(() => {
+        if (user?.email) {
+             axios.get(`/ownership/${user.email}`)
+                .then(res => {
+                    if (res.data) {
+                        setSelectedAvatar(res.data.selected_avatar || "");
+                    }
+                })
+                .catch(() => {
+                    setSelectedAvatar("");
+                });
+        }
+    }, [user]);
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -104,10 +130,11 @@ export default function Navbar() {
                         {/* Profile dropdown */}
                         <Menu as="div" className="relative ml-3">
                             <div>
-                                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                                    <span className="absolute -inset-1.5" />
-                                    <span className="sr-only">Open user menu</span>
-                                    <UserCircleIcon aria-hidden="true" className="size-8 rounded-full text-gray-400" />
+                                <MenuButton className="relative flex rounded-full bg-gray-800 focus:ring-2 hover:scale-105">
+                                    <img
+                                        src={avatarMap[selectedAvatar] || noobbrain}
+                                        className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300"
+                                    />
                                 </MenuButton>
                             </div>
                             <MenuItems

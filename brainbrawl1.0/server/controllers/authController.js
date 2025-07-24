@@ -22,6 +22,15 @@ const registerUser = async (req, res) => {
                 error: 'Name is required'
             })
         }
+        // Check is name is unique
+        const existName = await User.findOne({name})
+        if (existName) {
+            return res.json({
+                error: 'Name already exists'
+            })
+        }
+
+
         // Check if password was entered
         if(!password || password.length < 6) {
             return res.json({
@@ -29,8 +38,8 @@ const registerUser = async (req, res) => {
             })
         }
         // Check email
-        const exist = await User.findOne({email})
-        if (exist) {
+        const existEmail = await User.findOne({email})
+        if (existEmail) {
             return res.json({
                 error: 'Email already exists'
             })
@@ -220,7 +229,8 @@ const getOwnedItems = async (req, res) => {
         if (!ownership) {
             ownership = await Ownership.create({ 
                 user_email: req.user.email, 
-                item_list: [] 
+                item_list: [],
+                selected_avatar: ""
             });
         }
         const itemList = ownership.item_list || [];
@@ -307,6 +317,68 @@ const getStats = async (req, res) => {
     }
 }
 
+const updateProfile = async (req, res) => {
+    try {
+        const { oldEmail, email, name, selected_avatar } = req.body;
+        if (!oldEmail || !email || !name) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        let user = await User.findOne({ email: oldEmail });
+        if (!user) {
+            return res.status(404).json({ error:"User not found" });
+        }
+
+        const existEmail = await User.findOne({ email });
+        if (existEmail && existEmail._id.toString() !== user._id.toString()) {
+            return res.json({
+                error: 'Email already exists'
+            });
+        }
+
+        const existName = await User.findOne({ name });
+            if (existName && existName._id.toString() !== user._id.toString()) {
+                return res.json({
+                    error: 'Name already exists'
+                });
+            }
+
+
+        user.email = email;
+        user.name = name;
+        await user.save();
+
+        let ownership = await Ownership.findOne({ user_email: oldEmail });
+        if (!ownership) {
+            return res.status(404).json({ error:"Ownership not found" });
+        }
+        ownership.user_email = email;
+        if (selected_avatar) {
+            ownership.selected_avatar = selected_avatar;
+        }
+        await ownership.save();
+
+        res.json({
+            email: user.email,
+            name: user.name,
+            selected_avatar: ownership.selected_avatar,
+            title: user.title,
+        })
+
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({ error: "Server error" });
+    }
+}
+
+const getProfileOwnership = async (req, res) => {
+    const Ownership = require('../models/ownership');
+    const { email } = req.params;
+    const ownership = await Ownership.findOne({ user_email: email });
+    if (!ownership) return res.status(404).json({ error: "Not found" });
+    res.json(ownership);
+}
+
 
 module.exports = {
     test,
@@ -324,5 +396,7 @@ module.exports = {
     deductCoins,
     addOwnedItems,
     updateQuizStats,
-    getStats
+    getStats,
+    updateProfile,
+    getProfileOwnership
 }
