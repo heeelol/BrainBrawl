@@ -17,6 +17,7 @@ const socket = io('http://localhost:8000', {
 export default function Multiplayer() {
     const [answerDelay, setAnswerDelay] = useState(false);
     const {user} = useContext(UserContext);
+    const [levels, setLevels] = useState();
     const [playerAvatars, setPlayerAvatars] = useState({});
     const [roomCode, setRoomCode] = useState();
     const [info, setInfo] = useState(false);
@@ -39,6 +40,12 @@ export default function Multiplayer() {
     const [powerups, setPowerups] = useState({});
     const [powerupMsg, setPowerupMsg] = useState("");
     const [powerupCooldown, setPowerupCooldown] = useState(false);
+
+    useEffect(() => {
+        axios.get('/level')
+            .then(res =>setLevels(res.data))
+            .catch(() => setLevels(null));
+    }, []);
     
     // Powerup button handler
     const handleUsePowerup = (type) => {
@@ -455,16 +462,16 @@ export default function Multiplayer() {
                                     <button
                                         className={`px-4 py-2 rounded bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
                                         onClick={() => handleUsePowerup('shield')}
-                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('shield')}
+                                        disabled={levels.level < 3 || powerupCooldown || !powerups[myName] || !powerups[myName].includes('shield')}
                                     >
-                                        Shield {powerups[myName]?.filter(p => p === 'shield').length > 0 ? `(${powerups[myName].filter(p => p === 'shield').length})` : ''}
+                                        Shield {levels.level < 3 ? "(Require level 3)" : powerups[myName]?.filter(p => p === 'shield').length > 0 ? `(${powerups[myName].filter(p => p === 'shield').length})` : ''}
                                     </button>
                                     <button
                                         className={`px-4 py-2 rounded bg-yellow-500 text-white font-bold shadow hover:bg-yellow-600 transition disabled:opacity-40 disabled:cursor-not-allowed`}
                                         onClick={() => handleUsePowerup('double')}
-                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('double')}
+                                        disabled={levels.level < 5 || powerupCooldown || !powerups[myName] || !powerups[myName].includes('double')}
                                     >
-                                        Double Damage {powerups[myName]?.filter(p => p === 'double').length > 0 ? `(${powerups[myName].filter(p => p === 'double').length})` : ''}
+                                        Double Damage {levels.level < 5 ? "(Require level 5)" : powerups[myName]?.filter(p => p === 'double').length > 0 ? `(${powerups[myName].filter(p => p === 'double').length})` : ''}
                                     </button>
                                 </div>
                                 {powerupMsg && <div className="text-indigo-300 font-bold animate-pulse mt-2">{powerupMsg}</div>}

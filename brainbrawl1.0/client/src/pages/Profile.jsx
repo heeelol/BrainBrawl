@@ -156,18 +156,18 @@ export default function Profile() {
                         <ul className="py-4 mt-2 text-gray-700 flex items-center justify-around">
                             <li className="flex flex-col items-center justify-center">
                                 <div className="mb-2 pt-10">
-                                    <span className="text-lg text-green-400 font-medium">Win: {user?.win || 0} </span>
-                                    <span className="text-lg text-red-400 font-medium">Loss: {user?.loss || 0}</span>
+                                    <span className="text-md text-green-400 font-medium">Win: {user?.win || 0} </span>
+                                    <span className="text-md text-red-400 font-medium">Loss: {user?.loss || 0}</span>
                                 </div>
                             </li>
-                            <li className="flex flex-col items-center justify-between">
-                                <div className="mb-2 ml-7 pb-10">
+                            <li className="flex flex-col items-center justify-center">
+                                <div className="mb-2 ml-10 pb-10">
                                     <span className="text-xl text-yellow-300 font-bold animate-pulse">Level {stats?.level}</span>
                                 </div>
                             </li>
                             <li className="flex flex-col items-center justify-center">
                                 <div className="mb-2 pt-10">
-                                    <span className="text-lg text-blue-300 font-medium">Quizzes Attempted: {quizStats?.length}</span>
+                                    <span className="text-md text-blue-300 font-medium">Quizzes Attempted: {quizStats?.length}</span>
                                 </div>
                             </li>
                         </ul>
