@@ -40,6 +40,7 @@ export default function Multiplayer() {
     const [powerups, setPowerups] = useState({});
     const [powerupMsg, setPowerupMsg] = useState("");
     const [powerupCooldown, setPowerupCooldown] = useState(false);
+    const[powerupAnimation, setPowerupAnimation] = useState(null);
 
     useEffect(() => {
         axios.get('/level')
@@ -195,11 +196,16 @@ export default function Multiplayer() {
         socket.on('powerupState', (state) => {
             setPowerups(state);
         });
+
         socket.on('powerupUsed', (data) => {
             setPowerups(data.powerups);
             setHealth(data.health);
             setPowerupMsg(`${data.playerName} used ${data.powerupType.toUpperCase()}!`);
-            setTimeout(() => setPowerupMsg(""), 2000);
+            setPowerupAnimation({ type: data.powerupType, player: data.playerName });
+            setTimeout(() => { 
+                setPowerupMsg(""), 
+                setPowerupAnimation(null);
+             }, 1500);
         });
 
         socket.on('gameOver', (data)=>{
@@ -455,9 +461,9 @@ export default function Multiplayer() {
                                     <button
                                         className={`px-4 py-2 rounded bg-green-600 text-white font-bold shadow hover:bg-green-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
                                         onClick={() => handleUsePowerup('heal')}
-                                        disabled={powerupCooldown || !powerups[myName] || !powerups[myName].includes('heal')}
+                                        disabled={health[myName] > 4 ||powerupCooldown || !powerups[myName] || !powerups[myName].includes('heal')}
                                     >
-                                        Heal (+2 hp) {powerups[myName]?.filter(p => p === 'heal').length > 0 ? `(${powerups[myName].filter(p => p === 'heal').length})` : ''}
+                                        Heal (+2 hp) {powerups[myName]?.filter(p => p === 'heal').length > 0 ? `(${powerups[myName].filter(p => p === 'heal').length})` : health[myName] > 4 ? "(You have max health now)" : "(out of heal)"}
                                     </button>
                                     <button
                                         className={`px-4 py-2 rounded bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition disabled:opacity-40 disabled:cursor-not-allowed`}
@@ -476,6 +482,28 @@ export default function Multiplayer() {
                                 </div>
                                 {powerupMsg && <div className="text-indigo-300 font-bold animate-pulse mt-2">{powerupMsg}</div>}
                             </div>
+
+                            {/* Powerup Animation */}
+                            {powerupAnimation && (
+                                <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+                                    {powerupAnimation.type === "heal" && (
+                                    <div className="animate-bounce text-green-400 text-2xl font-extrabold drop-shadow-lg">
+                                        <span role="img" aria-label="heal">💚</span> {powerupAnimation.player} healed!
+                                    </div>
+                                    )}
+                                    {powerupAnimation.type === "shield" && (
+                                    <div className="animate-pulse text-blue-400 text-2xl font-extrabold drop-shadow-lg">
+                                        <span role="img" aria-label="shield">🛡️</span> {powerupAnimation.player} shielded!
+                                    </div>
+                                    )}
+                                    {powerupAnimation.type === "double" && (
+                                    <div className="animate-wiggle text-yellow-400 text-2xl font-extrabold drop-shadow-lg">
+                                        <span role="img" aria-label="double">⚡</span> {powerupAnimation.player} double damage!
+                                    </div>
+                                    )}
+                                </div>
+                                )}
+                            
                             {/* Health bars */}
                             <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-4">
                                 {players.map((p, idx) => {
@@ -484,6 +512,12 @@ export default function Multiplayer() {
                                     if (hp === 2) barColor = 'from-yellow-300 to-yellow-500';
                                     if (hp === 1) barColor = 'from-red-400 to-red-600';
                                     if (hp === 0) barColor = 'from-gray-500 to-gray-700';
+                                    if (
+                                        powerupAnimation?.type === "shield" &&
+                                        powerupAnimation?.player === p.name
+                                        ) {
+                                        barColor = "from-blue-500 to-blue-700";
+                                        }
                                     return (
                                         <div key={idx} className="flex flex-col items-center relative">
                                             <span className="text-white font-bold mb-1 flex items-center gap-2">
