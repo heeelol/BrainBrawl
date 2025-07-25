@@ -169,14 +169,24 @@ const getQuizQuestions = async (req, res) => {
 
 const getLeaderboard = async (req, res) => {
     try {
-        const users = await User.find({}, 'name points')
+        const users = await User.find({}, 'name points email')
             .sort({ points: -1 })
             .lean();
+
+        const ownerships = await Ownership.find({
+            user_email: { $in: users.map(u => u.email) }
+        }).lean();
+
+        const avatarMap = {};
+        ownerships.forEach(o => {
+            avatarMap[o.user_email] = o.selected_avatar || "noobbrain";
+        });
 
         const leaderboard = users.map((u, i) => ({
             name: u.name,
             points: u.points || 0,
-            rank: i + 1
+            rank: i + 1,
+            avatar: avatarMap[u.email] || "noobbrain"
         }));
 
         res.json(leaderboard);

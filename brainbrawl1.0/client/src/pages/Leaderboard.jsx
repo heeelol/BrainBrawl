@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { avatarMap } from "../assets/avatars.js";
+import noobbrain from "../assets/noobbrain.jpg";
 
 export default function Leaderboard() {
     const [leaders, setLeaders] = useState([]);
@@ -37,6 +39,10 @@ export default function Leaderboard() {
                                     {idx === 0 && <span className="text-yellow-400 text-2xl animate-bounce">🥇</span>}
                                     {idx === 1 && <span className="text-gray-300 text-2xl">🥈</span>}
                                     {idx === 2 && <span className="text-yellow-600 text-2xl">🥉</span>}
+                                    <img
+                                        src={avatarMap[player.avatar] || noobbrain}
+                                        className="w-8 h-8 mr-2 rounded-full cursor-pointer border-2 border-gray-300"
+                                    />
                                     <span>{player.name}</span>
                                 </td>
                                 <td className="py-3">{player.points}</td>
