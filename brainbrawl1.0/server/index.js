@@ -200,9 +200,17 @@ io.on('connection', (socket) => {
                 // Award 100 points to the winner in the database
                 User.findOneAndUpdate(
                     { name: currentPlayer.name },
-                    { $inc: { points: 100, xp: 50, coins: 100 } },
+                    { $inc: { points: 100, xp: 50, coins: 100, win: 1 } },
                     { new: true }
                 ).then(() => {
+                    const losers = rooms[room].players.filter(p => p.name !== currentPlayer.name);
+                    losers.forEach(loser => {
+                        User.findOneAndUpdate(
+                            { email: loser.email },
+                            { $inc: { loss: 1 } },
+                            { new: true }
+                        ).exec();
+                    });
                     delete rooms[room];
                 });
                 return;

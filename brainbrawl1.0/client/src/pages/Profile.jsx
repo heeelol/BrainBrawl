@@ -21,6 +21,16 @@ export default function Profile() {
     const [editEmail, setEditEmail] = useState(user?.email || "");
     const [editAvatar, setEditAvatar] = useState("");
 
+      useEffect(() => {
+            axios.get('/profile')
+                .then(({data}) => {
+                    setUser(data);
+                })
+                .catch(() => {
+                    setUser(null);
+                });
+        }, []);
+
     useEffect(() => {
         if (user?.email) {
             axios.get(`/quizStats/${user.email}`)
@@ -144,14 +154,20 @@ export default function Profile() {
                              <p className="text-gray-500 text-sm">{user.title}</p> */}
                         </div>
                         <ul className="py-4 mt-2 text-gray-700 flex items-center justify-around">
+                            <li className="flex flex-col items-center justify-center">
+                                <div className="mb-2 pt-10">
+                                    <span className="text-lg text-green-400 font-medium">Win: {user?.win || 0} </span>
+                                    <span className="text-lg text-red-400 font-medium">Loss: {user?.loss || 0}</span>
+                                </div>
+                            </li>
                             <li className="flex flex-col items-center justify-between">
-                                <div className="mb-2">
-                                    <span className="text-lg text-yellow-300 font-bold">Level {stats?.level}</span>
+                                <div className="mb-2 ml-7 pb-10">
+                                    <span className="text-xl text-yellow-300 font-bold animate-pulse">Level {stats?.level}</span>
                                 </div>
                             </li>
                             <li className="flex flex-col items-center justify-center">
-                                <div className="mb-2">
-                                    <span className="text-lg text-blue-300 font-bold">Quiz Attempted: {quizStats?.length}</span>
+                                <div className="mb-2 pt-10">
+                                    <span className="text-lg text-blue-300 font-medium">Quizzes Attempted: {quizStats?.length}</span>
                                 </div>
                             </li>
                         </ul>

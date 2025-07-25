@@ -23,6 +23,7 @@ export default function Multiplayer() {
     const [questions, setQuestions] = useState('');
     const [options, setOptions] = useState([]);
     const [answered, setAnswered] = useState(false);
+    const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
 
     const [scoreList, setScoreList] = useState([]);
     const [seconds, setSeconds] = useState(); // Example timer value
@@ -149,6 +150,7 @@ export default function Multiplayer() {
             setAnswered(false);
             setSeconds(data.timer)
             setSelectedAnswerIndex();
+            setCorrectAnswerIndex(null);
         });
 
         socket.on('answerResult', (data) => {
@@ -158,6 +160,7 @@ export default function Multiplayer() {
                 toast.error(`${data.playerName} answered incorrectly!`);
             }
             setScoreList(data.scores);
+            setCorrectAnswerIndex(data.correctAnswer);
             // Use health from server if provided
             if (data.health) {
                 setHealth(data.health);
@@ -393,20 +396,21 @@ export default function Multiplayer() {
                                         </div>
                                         <ul className="flex flex-col space-y-3 font-medium text-gray-200 mt-7">
                                             {options.map((option, index) => {
-                                                let optionState = '';
-                                                if (answered) {
-                                                    if (selectedAnswerIndex === index) {
-                                                        optionState = 'answered-selected';
-                                                    } else {
-                                                        optionState = 'answered-unselected';
+                                                let optionStyle = 'bg-gray-700/60 hover:bg-indigo-700/60';
+
+                                                    if (answered) {
+                                                        if (index === correctAnswerIndex) {
+                                                            optionStyle = 'bg-green-600/80 text-white border-green-400';
+                                                        } else if (index === selectedAnswerIndex) {
+                                                            optionStyle = 'bg-red-600/80 text-white border-red-400';
+                                                        } else {
+                                                            optionStyle = 'bg-gray-700/30 text-gray-400';
+                                                        }
                                                     }
-                                                } else if (selectedAnswerIndex === index) {
-                                                    optionState = 'selected';
-                                                }
                                                 return (
                                                     <li
                                                         key={index}
-                                                        className={`quizList options relative group transition-all duration-200 border border-indigo-700/30 rounded-lg px-5 py-3 cursor-pointer bg-gray-700/60 hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/60 ${optionState}`}
+                                                        className={`quizList options relative group transition-all duration-200 border border-indigo-700/30 rounded-lg px-5 py-3 cursor-pointer bg-gray-700/60 hover:bg-indigo-700/60 hover:scale-[1.03] active:scale-95 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500/60 ${optionStyle}`}
                                                         onClick={() => handleAnswer(index)}
                                                         disabled={answered || answerDelay}
                                                         style={{
@@ -421,9 +425,6 @@ export default function Multiplayer() {
                                                         </span>
                                                         {selectedAnswerIndex === index && !answered && (
                                                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-indigo-300 animate-bounce">▶</span>
-                                                        )}
-                                                        {answered && selectedAnswerIndex === index && (
-                                                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-green-400 font-bold animate-pulse">✓</span>
                                                         )}
                                                     </li>
                                                 );
