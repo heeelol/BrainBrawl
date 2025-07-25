@@ -10,7 +10,7 @@ const multiQns = require('./models/multiQuiz');
 const User = require('./models/user');
 
 // Define frontend URL for local development
-const FRONTEND_URL = 'http://localhost:5173';
+const FRONTEND_URL = 'https://brainbrawl-frontend.vercel.app';
 
 // database connection to MongoDB
 mongoose.connect(process.env.MONGO_URL)

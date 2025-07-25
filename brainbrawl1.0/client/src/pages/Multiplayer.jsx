@@ -7,13 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { avatarMap } from "../assets/avatars.js";
 import noobbrain from "../assets/noobbrain.jpg";
-import mtfuji from "../assets/mtFuji.jpg";
 import healGif from "../assets/HEAL.gif";
 import shieldGif from "../assets/SHIELD.gif";
 import doubleGif from "../assets/DOUBLE.gif";
 
 
-const socket = io('http://localhost:8000', {
+const socket = io('https://brainbrawl-backend-bw7x.onrender.com', {
     transports: ['websocket'],
     withCredentials: true
 });
