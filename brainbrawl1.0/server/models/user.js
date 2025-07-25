@@ -26,6 +26,14 @@ const userSchema = new Schema({
     title: {
         type: String,
         default: "Noob",
+    },
+    win: {
+        type: Number,
+        default: 0
+    },
+    loss: {
+        type: Number,
+        default: 0
     }
 });
 

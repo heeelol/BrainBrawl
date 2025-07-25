@@ -10,7 +10,7 @@ const multiQns = require('./models/multiQuiz');
 const User = require('./models/user');
 
 // Define frontend URL for local development
-const FRONTEND_URL = 'https://brainbrawl-frontend.vercel.app';
+const FRONTEND_URL = 'http://localhost:5173';
 
 // database connection to MongoDB
 mongoose.connect(process.env.MONGO_URL)
@@ -99,7 +99,7 @@ function getInitialHealth(players) {
 io.on('connection', (socket) => {
     console.log('A player has connected');
 
-    socket.on("joinRoom", (room, name) => {
+    socket.on("joinRoom", (room, name, email) => {
         socket.join(room);
         if (!rooms[room]) {
             rooms[room] = {
@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
 
         // Add player if not already in room
         if (!rooms[room].players.find(p => p.id === socket.id)) {
-            rooms[room].players.push({ id: socket.id, name });
+            rooms[room].players.push({ id: socket.id, name, email });
         }
         // Always reset powerups for all players in the room
         rooms[room].powerups = getInitialPowerups(rooms[room].players);
@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
         // Reset health for all players
         rooms[room].health = getInitialHealth(rooms[room].players);
         // Broadcast player names to all in room
-        const playerNames = rooms[room].players.map(p => p.name);
+        const playerNames = rooms[room].players.map(p => ({ name: p.name, email: p.email}) );
         io.to(room).emit("playersList", playerNames);
         // Send powerup state to all
         io.to(room).emit("powerupState", rooms[room].powerups);
@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
         if (rooms[room]) {
             rooms[room].ready[socket.id] = true;
             // Broadcast player names to all in room
-            const playerNames = rooms[room].players.map(p => p.name);
+            const playerNames = rooms[room].players.map(p => ({ name: p.name, email: p.email }));
             io.to(room).emit("playersList", playerNames);
             // Emit ready count
             const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;
@@ -200,9 +200,17 @@ io.on('connection', (socket) => {
                 // Award 100 points to the winner in the database
                 User.findOneAndUpdate(
                     { name: currentPlayer.name },
-                    { $inc: { points: 100, xp: 50, coins: 100 } },
+                    { $inc: { points: 100, xp: 50, coins: 100, win: 1 } },
                     { new: true }
                 ).then(() => {
+                    const losers = rooms[room].players.filter(p => p.name !== currentPlayer.name);
+                    losers.forEach(loser => {
+                        User.findOneAndUpdate(
+                            { email: loser.email },
+                            { $inc: { loss: 1 } },
+                            { new: true }
+                        ).exec();
+                    });
                     delete rooms[room];
                 });
                 return;
@@ -248,7 +256,7 @@ io.on('connection', (socket) => {
                 continue;
             }
             // Broadcast updated player list
-            const playerNames = rooms[room].players.map(p => p.name);
+            const playerNames = rooms[room].players.map(p => ({ name: p.name, email: p.email }));
             io.to(room).emit("playersList", playerNames);
             // Emit ready count
             if (rooms[room]) {
@@ -272,7 +280,7 @@ io.on('connection', (socket) => {
             delete rooms[room].shields?.[name];
             delete rooms[room].doubleDamage?.[name];
             // Broadcast updated player list
-            const playerNames = rooms[room].players.map(p => p.name);
+            const playerNames = rooms[room].players.map(p => ({ name: p.name, email: p.email }));
             io.to(room).emit("playersList", playerNames);
             // Emit ready count
             const readyCount = Object.values(rooms[room].ready).filter(Boolean).length;

@@ -18,7 +18,7 @@ export default function Dashboard() {
     const {user} = useContext(UserContext);
     const navigate = useNavigate();
     const [leaders, setLeaders] = useState([]);
-    const [stats, setStats] = useState();
+    const [levels, setLevels] = useState();
 
     useEffect(() => {
         axios.get('/leaderboard')
@@ -28,8 +28,8 @@ export default function Dashboard() {
 
     useEffect(() => {
         axios.get('/level')
-            .then(res =>setStats(res.data))
-            .catch(() => setStats(null));
+            .then(res =>setLevels(res.data))
+            .catch(() => setLevels(null));
     }, []);
 
     const handleNavigation = (path) => {
@@ -48,16 +48,16 @@ export default function Dashboard() {
                         {/* Placeholder cards for dashboard content */}
                         <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-lg backdrop-blur-lg">
                             <h2 className="text-xl font-semibold text-white mb-4">Your Stats</h2>
-                            {stats ? (
+                            {levels ? (
                                 <>
                                     <div className="mb-2">
-                                        <span className="text-lg text-yellow-300 font-bold">Level {stats.level}</span>
+                                        <span className="text-lg text-yellow-300 font-bold">Level {levels.level}</span>
                                         <ProgressBar
-                                            percent={stats.needed ? (stats.current / stats.needed) * 100 : 0}
+                                            percent={levels.needed ? (levels.current / levels.needed) * 100 : 0}
                                             filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
                                         />
                                         <span className="text-gray-400 text-sm block mt-1">
-                                            XP: {stats.current} / {stats.needed}
+                                            XP: {levels.current} / {levels.needed}
                                         </span>
                                     </div>
                                 </>

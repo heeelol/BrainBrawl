@@ -85,7 +85,7 @@ export default function Shop() {
                     <div className="max-w-7xl mx-auto">
                         <h1 className="text-4xl font-bold text-white mb-8 flex justify-center items-center animate-pulse">Cosmetic Shop</h1>
                         <div className="mb-6 text-lg text-gray-200">
-                            Your Coins: <span className="font-semibold">{coins || 0}</span>
+                            Your Coins: <span className="font-semibold">{coins || 0} 🪙</span>
                         </div>
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {items.map((item) => (
@@ -96,7 +96,7 @@ export default function Shop() {
                                     <img src={item.img} alt={item.name} className={`h-20 w-20 mb-4 rounded-full ${item.style || ""}`} />
                                     <h2 className="text-xl font-semibold text-white mb-2">{item.name}</h2>
                                     <p className="text-gray-300 mb-4">{item.desc}</p>
-                                    <div className="mb-4 text-indigo-300 font-bold">Cost: {item.cost} coins</div>
+                                    <div className="mb-4 text-indigo-300 font-bold">Cost: {item.cost} 🪙</div>
                                     <button
                                         onClick={(e) => handleRedeem(e, item)}
                                         disabled={coins < item.cost || redeemed.includes(item.id)}
