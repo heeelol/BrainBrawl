@@ -8,6 +8,7 @@ import { UserContext } from '../../context/userContext.jsx';
 import logo from '../assets/brainbrawl_icon.png';
 import { avatarMap } from "../assets/avatars.js";
 import noobbrain from "../assets/noobbrain.jpg";
+import mtfuji from "../assets/mtFuji.jpg";
 
 const getNavigation = (isAuthenticated) => [
     ...(isAuthenticated ? [

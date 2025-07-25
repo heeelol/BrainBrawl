@@ -9,9 +9,13 @@ import engineer_pfp from "./engineer.jpg";
 import doctor_pfp from "./doctor.avif";
 import knight_pfp from "./knight.webp";
 import dragon_pfp from "./dragon.jpg";
+import mtfuji from "./mtFuji.jpg";
+import test from "./test.gif";
 
 export const avatarMap = {
     noobbrain: noobbrain,
+    mtfuji: mtfuji,
+    test: test,
     cat_pfp: cat_pfp,
     dog_pfp: dog_pfp,
     robot_pfp: robot_pfp,

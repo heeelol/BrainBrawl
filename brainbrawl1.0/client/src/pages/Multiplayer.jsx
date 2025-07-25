@@ -7,6 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { avatarMap } from "../assets/avatars.js";
 import noobbrain from "../assets/noobbrain.jpg";
+import mtfuji from "../assets/mtFuji.jpg";
+import healGif from "../assets/HEAL.gif";
+import shieldGif from "../assets/SHIELD.gif";
+import doubleGif from "../assets/DOUBLE.gif";
 
 
 const socket = io('http://localhost:8000', {
@@ -21,6 +25,8 @@ export default function Multiplayer() {
     const [playerAvatars, setPlayerAvatars] = useState({});
     const [roomCode, setRoomCode] = useState();
     const [info, setInfo] = useState(false);
+    const [showInstructions, setShowInstructions] = useState(false);
+    const [showPowerUps, setShowPowerUps] = useState("heal");
     const [questions, setQuestions] = useState('');
     const [options, setOptions] = useState([]);
     const [answered, setAnswered] = useState(false);
@@ -292,9 +298,9 @@ export default function Multiplayer() {
                                 <div className="flex justify-center"  key={idx}>
                                     <img
                                     src={avatarMap[playerAvatars[p.email]] || noobbrain}
-                                    className="w-7 h-7 mr-2 rounded-full cursor-pointer border-2 border-gray-300"
+                                    className="w-8 h-8 mr-2 rounded-full cursor-pointer border-2 border-gray-300"
                                     />
-                                    <li>{p.name}</li>
+                                    <li className="font-semibold text-xl">{p.name}</li>
                                 </div>
                             ))}
                         </ul>
@@ -366,6 +372,79 @@ export default function Multiplayer() {
                                     </div>
                                 </form>
                             </div>
+
+                            <div className="flex justify-center mt-10">
+                                <button 
+                                    onClick={() => setShowInstructions(true)}
+                                    className="px-2 py-2 bg-teal-700 text-white font-semibold rounded-lg hover:bg-teal-600"
+                                >
+                                How to play?
+                                </button>
+                            </div>
+
+                            {showInstructions && (
+                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+                                    <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full relative">
+                                    <button
+                                        className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold"
+                                        onClick={() => setShowInstructions(false)}
+                                        aria-label="Close"
+                                    >
+                                        &times;
+                                    </button>
+                                    <h2 className="text-2xl font-bold mb-4 text-indigo-700">How to Play Multiplayer</h2>
+                                    <ol className="list-decimal list-inside text-gray-800 space-y-2">
+                                        <li>Enter a room code and click <b>Battle On!</b> to join a game.</li>
+                                        <li>Wait for another player to join. When both are ready, click <b>I am Ready</b>.</li>
+                                        <li>Answer quiz questions as quickly and accurately as possible.</li>
+                                        <li>Each correct answer damages your opponent. First to lose all HP loses!</li>
+                                        <li>
+                                           <div className="flex justify-center gap-4 mb-6">
+                                            <button
+                                                className={`px-4 py-2 rounded font-bold ${showPowerUps === "heal" ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                                                onClick={() => setShowPowerUps("heal")}
+                                            >
+                                                Heal
+                                            </button>
+                                            <button
+                                                className={`px-4 py-2 rounded font-bold ${showPowerUps  === "shield" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                                                onClick={() => setShowPowerUps("shield")}
+                                            >
+                                                Shield
+                                            </button>
+                                            <button
+                                                className={`px-4 py-2 rounded font-bold ${showPowerUps  === "double" ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-700"}`}
+                                                onClick={() => setShowPowerUps("double")}
+                                            >
+                                                Double Damage
+                                            </button>
+                                            </div>
+                                            <div className="flex flex-col items-center">
+                                                {showPowerUps === "heal" && (
+                                                    <>
+                                                    <img src={healGif} alt="Heal Powerup" className="w-75 h-75 rounded-lg shadow-lg border-4 border-indigo-200 bg-white mb-4" />
+                                                    <span className="text-lg text-gray-800"><b>Heal</b>: Restore 2 HP - only use when not max Health.</span>
+                                                    </>
+                                                )}
+                                                {showPowerUps === "shield" && (
+                                                    <>
+                                                    <img src={shieldGif} alt="Shield Powerup" className="w-75 h-75 rounded-lg shadow-lg border-4 border-indigo-200 bg-white mb-4" />
+                                                    <span className="text-lg text-gray-800"><b>Shield</b>: Block the next damage (unlocked at <span className="font-bold text-teal-500">level 3</span>).</span>
+                                                    </>
+                                                )}
+                                                {showPowerUps === "double" && (
+                                                    <>
+                                                    <img src={doubleGif} alt="Double Damage Powerup" className="w-75 h-75 rounded-lg shadow-lg border-4 border-indigo-200 bg-white mb-4" />
+                                                    <span className="text-lg text-gray-800"><b>Double Damage</b>: Next correct answer deals 2 damage (unlocked at <span className="font-bold text-yellow-500">level 5</span>).</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </li>
+                                        <li>Win to earn points, coins, and XP!</li>
+                                    </ol>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </> : <>
