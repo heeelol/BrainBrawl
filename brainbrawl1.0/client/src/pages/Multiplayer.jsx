@@ -4,6 +4,10 @@ import {UserContext} from "../../context/userContext.jsx";
 import io from 'socket.io-client';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { avatarMap } from "../assets/avatars.js";
+import noobbrain from "../assets/noobbrain.jpg";
+
 
 const socket = io('http://localhost:8000', {
     transports: ['websocket'],
@@ -13,6 +17,7 @@ const socket = io('http://localhost:8000', {
 export default function Multiplayer() {
     const [answerDelay, setAnswerDelay] = useState(false);
     const {user} = useContext(UserContext);
+    const [playerAvatars, setPlayerAvatars] = useState({});
     const [roomCode, setRoomCode] = useState();
     const [info, setInfo] = useState(false);
     const [questions, setQuestions] = useState('');
@@ -99,7 +104,7 @@ export default function Multiplayer() {
     useEffect(() => {
         if (user?.name && info) {
             setMyName(user.name);
-            socket.emit("joinRoom", roomCode, user?.name);
+            socket.emit("joinRoom", roomCode, user?.name, user?.email);
         }
     }, [info, user, roomCode]);
 
@@ -204,6 +209,26 @@ export default function Multiplayer() {
         };
     }, []);
 
+        useEffect(() => {
+        players.forEach(player => {
+            if (player.email && !playerAvatars[player.email]) {
+            axios.get(`/ownership/${player.email}`)
+                .then(res => {
+                setPlayerAvatars(prev => ({
+                    ...prev,
+                    [player.email]: res.data.selected_avatar || "noobbrain"
+                }));
+                })
+                .catch(() => {
+                setPlayerAvatars(prev => ({
+                    ...prev,
+                    [player.email]: "noobbrain"
+                }));
+                });
+            }
+        });
+    }, [players]);
+
     if (winner || Object.values(health).some(h => h === 0)) {
         // Find the winner (the one with health > 0)
         let winnerName = winner;
@@ -248,7 +273,13 @@ export default function Multiplayer() {
                         <p className="mt-2 text-sm text-indigo-300">Players in room:</p>
                         <ul className="mt-4 text-gray-200">
                             {players.map((p, idx) => (
-                                <li key={idx}>{p}</li>
+                                <div className="flex justify-center"  key={idx}>
+                                    <img
+                                    src={avatarMap[playerAvatars[p.email]] || noobbrain}
+                                    className="w-7 h-7 mr-2 rounded-full cursor-pointer border-2 border-gray-300"
+                                    />
+                                    <li>{p.name}</li>
+                                </div>
                             ))}
                         </ul>
                         <button
@@ -440,7 +471,7 @@ export default function Multiplayer() {
                             {/* Health bars */}
                             <div className="flex flex-wrap justify-center items-center gap-8 mb-8 mt-4">
                                 {players.map((p, idx) => {
-                                    const hp = health[p] ?? 5;
+                                    const hp = health[p.name] ?? 5;
                                     let barColor = 'from-green-400 to-green-600';
                                     if (hp === 2) barColor = 'from-yellow-300 to-yellow-500';
                                     if (hp === 1) barColor = 'from-red-400 to-red-600';
@@ -449,7 +480,11 @@ export default function Multiplayer() {
                                         <div key={idx} className="flex flex-col items-center relative">
                                             <span className="text-white font-bold mb-1 flex items-center gap-2">
                                                 <svg className="w-5 h-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
-                                                {p}
+                                                <img
+                                                src={avatarMap[playerAvatars[p.email]] || noobbrain}
+                                                className="w-7 h-7 mr-2 rounded-full cursor-pointer border-2 border-gray-300"
+                                                />
+                                                {p.name}
                                                 {p === myName && (
                                                     <span className="ml-2 px-2 py-0.5 rounded-full bg-indigo-600 text-xs font-semibold text-white shadow">You</span>
                                                 )}
