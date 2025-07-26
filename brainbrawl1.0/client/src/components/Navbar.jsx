@@ -121,7 +121,7 @@ export default function Navbar() {
                         {/* Profile dropdown */}
                         <Menu as="div" className="relative ml-3">
                             <div>
-                                <MenuButton className="relative flex rounded-full bg-gray-800 focus:ring-2 hover:scale-105">
+                                <MenuButton className="relative flex rounded-full bg-gray-800 focus:ring-2 hover:scale-105" data-testid="user-avatar">
                                     <img
                                         src={avatarMap[selectedAvatar] || noobbrain}
                                         className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300"
@@ -136,6 +136,7 @@ export default function Navbar() {
                                     <Link
                                         to="/profile"
                                         className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-teal-400"
+                                        test-dataid="profile"
                                     >
                                         Your Profile
                                     </Link>
@@ -144,6 +145,7 @@ export default function Navbar() {
                                     <button
                                         onClick={handleLogout}
                                         className="block w-full px-4 py-2 text-left text-sm font-semibold text-stone-700 hover:text-red-400 hover:bg-teal-400"
+                                        name="logout"
                                     >
                                         Sign out
                                     </button>

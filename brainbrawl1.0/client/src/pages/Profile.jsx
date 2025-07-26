@@ -105,7 +105,7 @@ export default function Profile() {
                     <img className="object-cover object-top w-full" src={backdrop}/>
                 </div>
                 <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-                    <img className="object-cover object-center h-32" src={isEditing ? avatarMap[editAvatar] : avatarMap[selectedAvatar] || (user.name == "test" ? mtfuji : noobbrain)}/>
+                    <img className="object-cover object-center h-32" src={isEditing ? avatarMap[editAvatar] : avatarMap[selectedAvatar] || (user.name == "test" ? mtfuji : noobbrain)} test-dataid="avatar"/>
                 </div>
                 
                 {isEditing ? (
@@ -149,7 +149,7 @@ export default function Profile() {
                 ) : (
                     <>
                         <div className="text-center mt-2">
-                            <h2 className="font-bold text-xl ">{user.name}</h2>
+                            <h2 className="font-bold text-xl" test-dataid="name">{user.name}</h2>
                             {/* //to be added on in the future (title)
                              <p className="text-gray-500 text-sm">{user.title}</p> */}
                         </div>
