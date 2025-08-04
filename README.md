@@ -4,7 +4,7 @@ BrainBrawl is a real-time quiz battle app that gamifies learning through XP, lev
 
 ## Live Demo
 
-Frontend (Vercel): brainbrawl-frontend.vercel.app
+Frontend (Vercel): [Link](https://brainbrawl-frontend.vercel.app/)
 
 ## Aim
 
