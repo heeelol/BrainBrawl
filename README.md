@@ -1,172 +1,80 @@
-**Team Name**
-- BrainBrawl
+# BrainBrawl
 
-**Team Members:**
- - Yap Jia Wei
- - Lee Kuan Yi
+BrainBrawl is a real-time quiz battle app that gamifies learning through XP, leveling, and custom avatars. Designed to make studying fun, users engage in 1v1 quiz battles, earn XP, and personalize their profile — all in a competitive, gamified environment.
 
-**Installation and Setup Guide**
+## Live Demo
 
-Follow these steps to run BrainBrawl locally:
+Frontend (Vercel): brainbrawl-frontend.vercel.app
 
-1. **Prerequisites**
-   - Node.js (v16 or higher)
-   - npm (Node Package Manager)
-   - Git
-   - MongoDB Atlas account (or local MongoDB installation)
+## Aim
 
-2. **Clone the Repository**
-  
-   git clone https://github.com/YourUsername/BrainBrawl.git
-   
-   cd BrainBrawl
-   
-
-4. **Set Up the Backend**
-   
-   cd brainbrawl1.0/server
-   npm install
-
-   The backend includes these key dependencies:
-   - Express.js for the server framework
-   - MongoDB and Mongoose for database operations
-   - JWT and bcrypt for authentication
-   - CORS for cross-origin resource sharing
-   - cookie-parser for handling cookies
-   - nodemon for development auto-reload
-   
-   Create a `.env` file in the server directory with your MongoDB connection string:
- 
-   MONGODB_URL=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
- 
-
-5. **Set Up the Frontend**
-
-   cd ../client
-   npm install
-
-   The frontend includes these key dependencies:
-   - Tailwind CSS for styling
-   - React Hot Toast for notifications
-   - HeadlessUI for UI components
-   - HeroIcons for icons
-   - React Router for navigation
-   - Axios for API calls
-
-
-6. **Run the Application**
-   
-   Start the backend server (from the server directory):
-
-   npm start
-
-   
-   Start the frontend development server (from the client directory):
-
-   npm run dev
-
-
-7. **Access the Application**
-   - Frontend: Open http://localhost:5173 in your browser
-   - Backend API: http://localhost:3000
-
-8. **Test Account**
-   - Email: test@gmail.com
-   - Password: 123456
-
-**Troubleshooting**
-- If you encounter CORS issues, ensure both frontend and backend servers are running
-- For database connection issues, verify your MongoDB connection string in the `.env` file
-- Make sure all required ports (3000 for backend, 5173 for frontend) are available
-
-**Development**
-- Frontend code is in `brainbrawl1.0/client/src`
-- Backend API routes are in `brainbrawl1.0/server/routes`
-- Database models are in `brainbrawl1.0/server/models`
+Make studying engaging and rewarding by integrating gamification, competitive quizzes, progression systems, and avatar customization into a learning app.
 
 **Proposed Level of Achievement**
 
-Apollo 11 — We aim to go beyond basic features with real-time multiplayer, gamification, and user progression systems, fully deployed with complete documentation and UI polish.
-	
-**Aim**
+Apollo 11 – Beyond core features, we implemented real-time multiplayer, gamification systems, full-stack deployment, and polished UI/UX.
 
-BrainBrawl seeks to make studying fun by combining competitive gaming with academic quizzes. The goal is to create a platform where students revise through real-time 1v1 battles, gain XP, level up, and customize avatars, transforming boring study sessions into exciting challenges.
+## Target Users
 
-**Motivation**
+Students looking to revise in a fun way
 
-The motivation behind this project is to make studying more engaging and exciting, so that they will learn concepts more effectively and hence be better equipped with relevant toolsets for the future. Traditional revision methods can feel monotonous, leading to procrastination. By introducing gamification, like 1v1 battles, level-ups, and interactive feedback, this app aims to encourage consistent learning habits while keeping users motivated.
+Competitive learners
 
-**One-Sentence Scope**
+Casual gamers who enjoy quizzes
 
-A real-time quiz battle app that gamifies learning through XP, leveling, and custom avatars.
+## Tech Stack
 
-**Descriptive Scope**
+Frontend: React + Vite + TailwindCSS
 
-BrainBrawl is a full-stack MERN web app that turns quiz-based revision into a competitive and fun experience. Players challenge others in live quiz duels, earn experience, and unlock avatar customizations. A leaderboard tracks global rankings while the integrated shop and cosmetic features keep users invested and progressing.
+Backend: Node.js + Express.js + Socket.io
 
-**User Stories**
+Database: MongoDB (Atlas)
 
-1. As a student who wants to revise effectively, I want to participate in quizzes so that I can test and improve my knowledge.
-2. As a competitive user who enjoys challenges, I want to engage in 1v1 quiz battles so that I can compete and level up.
-3. As a learner who values progress tracking, I want to view my performance history and level progression to stay motivated.
+Authentication: JWT + bcrypt
 
-**Tech Stack**
+Tools: GitHub, Figma, Canva, Draw.io
 
-- Frontend: React + Vite + TailwindCSS
-- Backend: Node.js + Express.js
-- Database: MongoDB (hosted via MongoDB Atlas)
-- Auth: JWT + bcrypt
-- Version Control: Git + GitHub
-- Design: Canva (posters), Draw.io (flowcharts), Figma (UI mockups)
+## Features
 
-**Core Features**
+✅ Login & Registration with JWT auth
 
-**Login & Registration (implemented ✅)**
+✅ Quiz System with topic-based question pools
 
-As BrainBrawl is a personalized, gamified quiz app, each user requires a secure and unique account to track progress, XP, and unlockables.
+✅ Real-time 1v1 Battle Mode using Socket.IO
 
-BrainBrawl currently supports account registration and login using email and password, with secure session management. The system is designed with best practices for authentication and user safety, using industry-standard libraries and database security principles.
+✅ Leaderboard showing top global rankings
 
-Using the backend authentication logic implemented in Node.js + Express, and a MySQL database, users can:
+✅ XP System & Level Progression
 
-- Create an account using email and password
+✅ Custom Avatars and Profiles
 
-- Log in using valid credentials
+✅ Learning Insights (accuracy, timing, weak topics)
 
-- Receive an authentication token (JWT) to access protected features
+✅ Cosmetic Shop (redeem avatars with earned coins)
 
-- Interact with the dashboard only when authenticated
+## Testing
 
-Upon user registration, the password is hashed securely with bcrypt before storing in the database. During login, the backend verifies the password and returns a signed JWT token, which the frontend uses to access protected routes. Input validation is performed to prevent malformed or insecure data.
+Manual testing via Postman
 
-The API responds with appropriate messages for invalid inputs, and all authentication-related errors are handled gracefully on both the frontend and backend.
+End-to-end testing with Cypress
 
-**Quiz System with Question Pool (Basic Version implemented ✅)**
+Real user feedback through a testing form
 
-The quiz system allows users to take quizzes from a pool of questions, with various topics to choose from, providing a variety of engaging quizzes that keeps users interested.
+## Project Structure
+Frontend: Component-based React structure
 
-For now, there is only one topic available, which is "General Knowledge". The quiz system is designed to be extensible, allowing for easy addition of new topics and questions in the future.
+Backend: REST API with modular MVC separation
 
-Currently, the quiz system is entirely frontend-based, with the questions and answers written down in a JavaScript file. When the quiz starts, the system retrieves the questions and their options from the JavaScript file, and the user is presented with these questions and multiple-choice answers, each question at a time. When the user selects an answer for a question, the system will check from the question data if it is correct or not. 
+Socket Server: Handles real-time multiplayer sessions
 
-Once the user selects an option, the answer will be revealed instantly, and the user cannot select any other options and has to move onto the next question. If the answer is correct, the user gains 1 point, and if it is incorrect, the user does not lose or gain any points.
+## Development Timeline
 
-After the quiz ends, the user is presented with their score (the number of questions answered correctly). Then the user can exit the quiz interface and return to the dashboard.
+Liftoff to Milestone 3 completed across 3 months
 
-In the future, the quiz will also use backend features, such as using the MongoDB database to store and retrieve question data, and more topics and multiplayer battles will be added. The system will also provide feedback on which questions were answered correctly or incorrectly, allowing users to learn from their mistakes.
+Full breakdown in Orbital Project Log.xlsx (see 7449 Milestone 3 README.pdf)
 
-**Real-time 1v1 Battle Mode (🔜 Milestone 2)**
+## Authors
+Yap Jia Wei
 
-**XP System, Level Progression (🔜  Milestone 2)**
+Lee Kuan Yi
 
-**Leaderboard (🔜  Milestone 2)**
-
-**Custom Avatars and Profiles (🔜  Milestone 3)**
-
-**Learning Insights (🔜  Milestone 3)**
-
-**Cosmetic Shop (🔜  Milestone 3)**
-
-**Work Log**
-- Refer to spreadsheet: https://nusu-my.sharepoint.com/:x:/r/personal/e1398391_u_nus_edu/Documents/Orbital%20Project%20Log.xlsx?d=w4f56c5a81a944623ae50481b5c01b7a7&csf=1&web=1&e=Hedxqs
