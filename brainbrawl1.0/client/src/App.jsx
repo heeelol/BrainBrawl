@@ -19,8 +19,10 @@ import LoggedInProtect from "./components/LoggedInProtect.jsx";
 import Insights from "./pages/Insights.jsx";
 import Shop from "./pages/Shop.jsx";
 import Profile from "./pages/Profile.jsx";
+import About from "./pages/About.jsx";
+import {ContactUs} from "./pages/ContactUs.jsx";
 
-axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
+axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
@@ -43,6 +45,24 @@ function App() {
             </header>
             <Home />
         </>} />
+        <Route path="/about" element={<>
+           <PageTitle title="About" />
+           <header className="sticky top-0 z-50 flex justify-center items-center">
+               <div className="xl:max-w-full w-full">
+                    <Navbar_2 />
+              </div>
+           </header>
+           <About />
+        </>} />
+          <Route path="/contact-us" element={<>
+              <PageTitle title="Contact Us" />
+              <header className="sticky top-0 z-50 flex justify-center items-center">
+                  <div className="xl:max-w-full w-full">
+                      <Navbar_2 />
+                  </div>
+              </header>
+              <ContactUs />
+          </>} />
         <Route path="/login" element={<>
           <LoggedInProtect>
             <PageTitle title="Login" />

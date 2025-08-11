@@ -100,7 +100,7 @@ export default function Profile() {
             <h2 className="text-4xl font-bold text-white mb-4 flex justify-center pt-20 animate-pulse z-0">Profile</h2>
         
             <div
-                className="max-w-screen mx-4 sm:max-w-sm md:max-w-sm lg:min-w-4xl xl:min-w-4xl sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900">
+                className="max-w-screen mx-4 sm:max-w-sm md:max-w-sm lg:min-w-4xl xl:min-w-4xl sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-gray-800 shadow-xl rounded-lg text-white">
                  <div className="rounded-t-lg h-50 overflow-hidden">
                     <img className="object-cover object-top w-full" src={backdrop}/>
                 </div>
@@ -173,7 +173,7 @@ export default function Profile() {
                         </ul>
                         <div className="p-4 border-t mx-8 mt-8">
                             <button
-                                className="w-3/4 block mx-auto rounded-full bg-gray-900 hover:shadow-lg hover:bg-gray-700 font-semibold text-white px-6 py-2"
+                                className="w-3/4 block mx-auto rounded-full bg-white hover:shadow-lg hover:bg-gray-300 font-semibold text-gray-900 px-6 py-2"
                                 onClick={() => {
                                     setEditName(user.name);
                                     setEditEmail(user.email);

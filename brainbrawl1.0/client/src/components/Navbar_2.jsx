@@ -11,7 +11,7 @@ import {toast} from "react-hot-toast";
 const getNavigation = [
     { name: 'Home', href: '/', current: false },
     { name: 'About', href: '/about', current: false },
-    { name: 'Contact Us', href: '#', current: false },
+    { name: 'Contact Us', href: '/contact-us', current: false },
 ]
 
 function classNames(...classes) {
