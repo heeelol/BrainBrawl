@@ -22,7 +22,7 @@ import Profile from "./pages/Profile.jsx";
 import About from "./pages/About.jsx";
 import {ContactUs} from "./pages/ContactUs.jsx";
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'https://brainbrawl-backend-bw7x.onrender.com';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
