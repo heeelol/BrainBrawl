@@ -12,7 +12,7 @@ import shieldGif from "../assets/SHIELD.gif";
 import doubleGif from "../assets/DOUBLE.gif";
 
 
-const socket = io('http://localhost:8000', {
+const socket = io('https://brainbrawl-backend-bw7x.onrender.com', {
     transports: ['websocket'],
     withCredentials: true
 });
